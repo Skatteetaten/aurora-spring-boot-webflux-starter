@@ -1,1 +1,1 @@
-# aurora-spring-boot-webflux-starter
+# Aurora Spring Boot WebFlux Starter
