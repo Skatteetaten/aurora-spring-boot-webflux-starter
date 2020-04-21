@@ -14,9 +14,9 @@ import org.springframework.core.io.support.EncodedResource;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @PropertySource(
     value = "classpath:aurora-openshift-spring-boot-starter.yml",
-    factory = BaseStarterApplicationConfig.YamlPropertyLoaderFactory.class
+    factory = WebfluxStarterApplicationConfig.YamlPropertyLoaderFactory.class
 )
-public class BaseStarterApplicationConfig {
+public class WebfluxStarterApplicationConfig {
     static class YamlPropertyLoaderFactory extends DefaultPropertySourceFactory {
         @Override
         public org.springframework.core.env.PropertySource<?> createPropertySource(

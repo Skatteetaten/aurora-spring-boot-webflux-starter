@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest(classes = [BaseStarterApplicationConfig::class])
-class BaseStarterApplicationConfigTest {
+@SpringBootTest(classes = [WebfluxStarterApplicationConfig::class])
+class WebfluxStarterApplicationConfigTest {
     @Autowired
-    private lateinit var config: BaseStarterApplicationConfig
+    private lateinit var config: WebfluxStarterApplicationConfig
 
     @Value("\${management.server.port}")
     private lateinit var managementPort: String
