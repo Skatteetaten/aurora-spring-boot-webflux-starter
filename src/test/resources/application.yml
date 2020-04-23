@@ -1,4 +1,0 @@
-aurora:
-    db: mydb
-
-MYDB_DB_PROPERTIES: src/test/resources/db.properties
