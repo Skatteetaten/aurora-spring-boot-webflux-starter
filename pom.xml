@@ -9,11 +9,11 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>Aurora Spring Boot Base Starter</name>
+  <name>Aurora Spring Boot WebFlux Starter</name>
   <description>
-    Base starter for Aurora
+    WebFlux starter for Aurora
   </description>
-  <url>https://github.com/Skatteetaten/aurora-spring-boot-base-starter</url>
+  <url>https://github.com/Skatteetaten/aurora-spring-boot-webflux-starter</url>
 
   <licenses>
     <license>
@@ -31,9 +31,9 @@
   </distributionManagement>
 
   <scm>
-    <url>https://github.com/Skatteetaten/aurora-spring-boot-base-starter</url>
-    <connection>git@github.com:Skatteetaten/aurora-spring-boot-base-starter.git</connection>
-    <developerConnection>git@github.com:Skatteetaten/aurora-spring-boot-base-starter.git</developerConnection>
+    <url>https://github.com/Skatteetaten/aurora-spring-boot-webflux-starter</url>
+    <connection>git@github.com:Skatteetaten/aurora-spring-boot-webflux-starter.git</connection>
+    <developerConnection>git@github.com:Skatteetaten/aurora-spring-boot-webflux-starter.git</developerConnection>
   </scm>
 
   <developers>
