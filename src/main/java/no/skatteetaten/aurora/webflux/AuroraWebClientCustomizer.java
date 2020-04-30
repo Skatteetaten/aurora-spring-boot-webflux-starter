@@ -12,7 +12,6 @@ import org.springframework.boot.web.reactive.function.client.WebClientCustomizer
 import org.springframework.web.reactive.function.client.WebClient;
 
 public class AuroraWebClientCustomizer implements WebClientCustomizer {
-
     private final String name;
 
     public AuroraWebClientCustomizer(String name) {

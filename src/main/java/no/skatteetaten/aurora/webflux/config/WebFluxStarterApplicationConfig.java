@@ -1,20 +1,20 @@
 package no.skatteetaten.aurora.webflux.config;
 
-import static brave.propagation.ExtraFieldPropagation.get;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer;
+import org.springframework.cloud.sleuth.instrument.web.HttpServerRequestParser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import brave.http.HttpRequestParser;
 import no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter;
-import no.skatteetaten.aurora.webflux.AuroraWebSpanCustomizer;
+import no.skatteetaten.aurora.webflux.AuroraRequestParser;
 import no.skatteetaten.aurora.webflux.AuroraWebClientCustomizer;
 
-@Configuration
 @EnableConfigurationProperties(WebFluxStarterProperties.class)
+@Configuration
 public class WebFluxStarterApplicationConfig {
 
     @Bean
@@ -29,9 +29,9 @@ public class WebFluxStarterApplicationConfig {
         return new AuroraWebClientCustomizer(name);
     }
 
-    @Bean
+    @Bean(HttpServerRequestParser.NAME)
     @ConditionalOnProperty(prefix = "aurora.webflux.header.span.interceptor", name = "enabled", matchIfMissing = true)
-    public AuroraWebSpanCustomizer auroraSpanCustomizer() {
-        return new AuroraWebSpanCustomizer();
+    public HttpRequestParser sleuthHttpServerRequestParser() {
+        return new AuroraRequestParser();
     }
 }

@@ -3,12 +3,14 @@ package no.skatteetaten.aurora.webflux;
 import java.util.UUID;
 
 import org.slf4j.MDC;
+import org.springframework.cloud.sleuth.instrument.web.TraceWebFilter;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 
+import brave.Span;
 import brave.propagation.ExtraFieldPropagation;
 import reactor.core.publisher.Mono;
 
@@ -20,36 +22,43 @@ public class AuroraHeaderWebFilter implements WebFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return Ordered.LOWEST_PRECEDENCE - 2;
+        return TraceWebFilter.ORDER + 1;
     }
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        MDC.remove(USER_AGENT_FIELD);
-        MDC.remove(KLIENTID_FIELD);
-        MDC.remove(MELDINGID_FIELD);
-        MDC.remove(KORRELASJONSID_FIELD);
+        setFieldValue(exchange, KLIENTID_FIELD, USER_AGENT_FIELD);
+        setFieldValue(exchange, MELDINGID_FIELD, UUID.randomUUID().toString());
+        setFieldValue(exchange, KORRELASJONSID_FIELD, getKorrelasjonsid(exchange));
 
+        return chain.filter(exchange);
+    }
+
+    private void setFieldValue(ServerWebExchange exchange, String fieldName, String value) {
+        MDC.remove(fieldName);
+        String headerValue = exchange.getRequest().getHeaders().getFirst(fieldName);
+        if (headerValue == null) {
+            headerValue = value;
+        }
+        MDC.put(fieldName, headerValue);
+    }
+
+    private String getKorrelasjonsid(ServerWebExchange exchange) {
         HttpHeaders headers = exchange.getRequest().getHeaders();
-
-        String klientId = headers.getFirst(KLIENTID_FIELD);
-        if (klientId == null) {
-            klientId = headers.getFirst(USER_AGENT_FIELD);
+        String korrelasjonsId = headers.getFirst(KORRELASJONSID_FIELD);
+        if (korrelasjonsId != null) {
+            return korrelasjonsId;
         }
-        ExtraFieldPropagation.set(KLIENTID_FIELD, klientId);
-        MDC.put(KLIENTID_FIELD, klientId);
 
-        String userAgent = headers.getFirst(USER_AGENT_FIELD);
-        ExtraFieldPropagation.set(USER_AGENT_FIELD, userAgent);
-        MDC.put(USER_AGENT_FIELD, userAgent);
-
-        String meldingsId = headers.getFirst(MELDINGID_FIELD);
-        if (meldingsId == null) {
-            meldingsId = UUID.randomUUID().toString();
+        Span currentSpan = exchange.getAttribute(TraceWebFilter.class.getName() + ".TRACE");
+        if (currentSpan != null && currentSpan.context() != null) {
+            String spanKorrId =
+                ExtraFieldPropagation.get(currentSpan.context(), KORRELASJONSID_FIELD);
+            if (spanKorrId != null) {
+                return spanKorrId;
+            }
         }
-        ExtraFieldPropagation.set(MELDINGID_FIELD, meldingsId);
-        MDC.put(MELDINGID_FIELD, meldingsId);
 
-        return null;
+        return UUID.randomUUID().toString();
     }
 }

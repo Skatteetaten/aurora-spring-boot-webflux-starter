@@ -16,11 +16,11 @@ public class WebFluxStarterProperties {
         this.filter = filter;
     }
 
-    public AuroraPropsWebClient getWebclient() {
+    public AuroraPropsWebClient getWebClient() {
         return webclient;
     }
 
-    public void setResttemplate(AuroraPropsWebClient webclient) {
+    public void setWebClient(AuroraPropsWebClient webclient) {
         this.webclient = webclient;
     }
 
@@ -45,18 +45,18 @@ public class WebFluxStarterProperties {
     }
 
     public static class AuroraPropsWebClient {
-        private AuroraPropsResttemplateInterceptor interceptor;
+        private AuroraPropsWebClientInterceptor interceptor;
 
-        public AuroraPropsResttemplateInterceptor getInterceptor() {
+        public AuroraPropsWebClientInterceptor getInterceptor() {
             return interceptor;
         }
 
         public void setInterceptor(
-            AuroraPropsResttemplateInterceptor interceptor) {
+            AuroraPropsWebClientInterceptor interceptor) {
             this.interceptor = interceptor;
         }
 
-        public static class AuroraPropsResttemplateInterceptor {
+        public static class AuroraPropsWebClientInterceptor {
             private boolean enabled;
 
             public boolean isEnabled() {
