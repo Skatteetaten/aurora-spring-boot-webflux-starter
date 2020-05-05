@@ -27,38 +27,64 @@ public class AuroraHeaderWebFilter implements WebFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        setFieldValue(exchange, KLIENTID_FIELD, USER_AGENT_FIELD);
-        setFieldValue(exchange, MELDINGID_FIELD, UUID.randomUUID().toString());
-        setFieldValue(exchange, KORRELASJONSID_FIELD, getKorrelasjonsid(exchange));
+        AuroraField.create(exchange).withName(KLIENTID_FIELD).withValue(USER_AGENT_FIELD);
+        AuroraField.create(exchange).withName(MELDINGID_FIELD).withGeneratedId();
+        AuroraField.create(exchange).withName(KORRELASJONSID_FIELD).withKorrelasjonsid();
 
         return chain.filter(exchange);
     }
 
-    private void setFieldValue(ServerWebExchange exchange, String fieldName, String value) {
-        MDC.remove(fieldName);
-        String headerValue = exchange.getRequest().getHeaders().getFirst(fieldName);
-        if (headerValue == null) {
-            headerValue = value;
-        }
-        MDC.put(fieldName, headerValue);
-    }
+    private static class AuroraField {
+        private final ServerWebExchange exchange;
+        private String name;
 
-    private String getKorrelasjonsid(ServerWebExchange exchange) {
-        HttpHeaders headers = exchange.getRequest().getHeaders();
-        String korrelasjonsId = headers.getFirst(KORRELASJONSID_FIELD);
-        if (korrelasjonsId != null) {
-            return korrelasjonsId;
+        public AuroraField(ServerWebExchange exchange) {
+            this.exchange = exchange;
         }
 
-        Span currentSpan = exchange.getAttribute(TraceWebFilter.class.getName() + ".TRACE");
-        if (currentSpan != null && currentSpan.context() != null) {
-            String spanKorrId =
-                ExtraFieldPropagation.get(currentSpan.context(), KORRELASJONSID_FIELD);
-            if (spanKorrId != null) {
-                return spanKorrId;
+        AuroraField withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        void withValue(String value) {
+            MDC.remove(name);
+            String headerValue = exchange.getRequest().getHeaders().getFirst(name);
+            if (headerValue == null) {
+                headerValue = value;
             }
+            MDC.put(name, headerValue);
         }
 
-        return UUID.randomUUID().toString();
+        void withGeneratedId() {
+            withValue(UUID.randomUUID().toString());
+        }
+
+        void withKorrelasjonsid() {
+            withValue(getKorrelasjonsid());
+        }
+
+        private String getKorrelasjonsid() {
+            HttpHeaders headers = exchange.getRequest().getHeaders();
+            String korrelasjonsId = headers.getFirst(KORRELASJONSID_FIELD);
+            if (korrelasjonsId != null) {
+                return korrelasjonsId;
+            }
+
+            Span currentSpan = exchange.getAttribute(TraceWebFilter.class.getName() + ".TRACE");
+            if (currentSpan != null && currentSpan.context() != null) {
+                String spanKorrId =
+                    ExtraFieldPropagation.get(currentSpan.context(), KORRELASJONSID_FIELD);
+                if (spanKorrId != null) {
+                    return spanKorrId;
+                }
+            }
+
+            return UUID.randomUUID().toString();
+        }
+
+        public static AuroraField create(ServerWebExchange exchange) {
+            return new AuroraField(exchange);
+        }
     }
 }
