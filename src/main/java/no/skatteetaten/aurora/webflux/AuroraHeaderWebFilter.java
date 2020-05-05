@@ -34,11 +34,11 @@ public class AuroraHeaderWebFilter implements WebFilter, Ordered {
         return chain.filter(exchange);
     }
 
-    private static class AuroraField {
+    static class AuroraField {
         private final ServerWebExchange exchange;
         private String name;
 
-        public AuroraField(ServerWebExchange exchange) {
+        AuroraField(ServerWebExchange exchange) {
             this.exchange = exchange;
         }
 
@@ -83,7 +83,7 @@ public class AuroraHeaderWebFilter implements WebFilter, Ordered {
             return UUID.randomUUID().toString();
         }
 
-        public static AuroraField create(ServerWebExchange exchange) {
+        static AuroraField create(ServerWebExchange exchange) {
             return new AuroraField(exchange);
         }
     }
