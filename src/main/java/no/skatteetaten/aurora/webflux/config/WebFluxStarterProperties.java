@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "aurora.webflux.header")
 public class WebFluxStarterProperties {
     private AuroraPropsFilter filter;
-    private AuroraPropsWebClient webclient;
+    private AuroraPropsWebclient webclient;
     private AuroraPropsSpan span;
 
     public AuroraPropsFilter getFilter() {
@@ -16,11 +16,11 @@ public class WebFluxStarterProperties {
         this.filter = filter;
     }
 
-    public AuroraPropsWebClient getWebClient() {
+    public AuroraPropsWebclient getWebclient() {
         return webclient;
     }
 
-    public void setWebClient(AuroraPropsWebClient webclient) {
+    public void setWebclient(AuroraPropsWebclient webclient) {
         this.webclient = webclient;
     }
 
@@ -44,7 +44,7 @@ public class WebFluxStarterProperties {
         }
     }
 
-    public static class AuroraPropsWebClient {
+    public static class AuroraPropsWebclient {
         private AuroraPropsWebClientInterceptor interceptor;
 
         public AuroraPropsWebClientInterceptor getInterceptor() {
