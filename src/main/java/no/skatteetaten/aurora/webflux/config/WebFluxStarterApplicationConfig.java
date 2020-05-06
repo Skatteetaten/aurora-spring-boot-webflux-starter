@@ -25,7 +25,7 @@ public class WebFluxStarterApplicationConfig {
 
     @Bean
     @ConditionalOnProperty(prefix = "aurora.webflux.header.webclient.interceptor", name = "enabled")
-    public WebClientCustomizer userAgentWebClientCustomizer(@Value("${spring.application.name}") String name) {
+    public WebClientCustomizer webClientCustomizer(@Value("${spring.application.name}") String name) {
         return new AuroraWebClientCustomizer(name);
     }
 

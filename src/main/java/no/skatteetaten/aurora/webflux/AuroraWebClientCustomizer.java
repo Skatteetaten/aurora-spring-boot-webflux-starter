@@ -8,6 +8,8 @@ import static no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.KORRELASJONSI
 import static no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.MELDINGID_FIELD;
 import static no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.USER_AGENT_FIELD;
 
+import java.util.UUID;
+
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -26,8 +28,16 @@ public class AuroraWebClientCustomizer implements WebClientCustomizer {
             .filter((request, next) -> next.exchange(
                 from(request)
                     .header(MELDINGID_FIELD, randomUUID().toString())
-                    .header(KORRELASJONSID_FIELD, get(KORRELASJONSID_FIELD))
+                    .header(KORRELASJONSID_FIELD, getKorrelasjonsid())
                     .build()
             ));
+    }
+
+    private String getKorrelasjonsid() {
+        String id = get(KORRELASJONSID_FIELD);
+        if (id == null) {
+            return UUID.randomUUID().toString();
+        }
+        return id;
     }
 }
