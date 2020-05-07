@@ -19,8 +19,8 @@ public class WebFluxStarterApplicationConfig {
 
     @Bean
     @ConditionalOnProperty(prefix = "aurora.webflux.header.filter", name = "enabled", matchIfMissing = true)
-    public AuroraHeaderWebFilter auroraHeaderWebFilter() {
-        return new AuroraHeaderWebFilter();
+    public AuroraHeaderWebFilter auroraHeaderWebFilter(@Value("${spring.application.name}") String name) {
+        return new AuroraHeaderWebFilter(name);
     }
 
     @Bean

@@ -20,6 +20,12 @@ public class AuroraHeaderWebFilter implements WebFilter, Ordered {
     public static final String MELDINGID_FIELD = "Meldingsid";
     public static final String KLIENTID_FIELD = "Klientid";
 
+    private final String name;
+
+    public AuroraHeaderWebFilter(String name) {
+        this.name = name;
+    }
+
     @Override
     public int getOrder() {
         return TraceWebFilter.ORDER + 1;
@@ -27,10 +33,10 @@ public class AuroraHeaderWebFilter implements WebFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        AuroraField.create(exchange).withName(KLIENTID_FIELD).withValue(USER_AGENT_FIELD);
+        AuroraField.create(exchange).withName(USER_AGENT_FIELD).withValue(name);
+        AuroraField.create(exchange).withName(KLIENTID_FIELD).withValue(name);
         AuroraField.create(exchange).withName(MELDINGID_FIELD).withGeneratedId();
         AuroraField.create(exchange).withName(KORRELASJONSID_FIELD).withKorrelasjonsid();
-
         return chain.filter(exchange);
     }
 

@@ -1,6 +1,7 @@
 package no.skatteetaten.aurora.webflux
 
 import assertk.assertThat
+import assertk.assertions.isEqualTo
 import assertk.assertions.isNotEmpty
 import assertk.assertions.isNotNull
 import no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.KLIENTID_FIELD
@@ -70,7 +71,7 @@ class AuroraHeaderWebFilterTest {
         val headers = request.headers
         assertThat(headers[KORRELASJONSID_FIELD]).isNotNull().isNotEmpty()
         assertThat(headers[MELDINGID_FIELD]).isNotNull().isNotEmpty()
-        assertThat(headers[USER_AGENT_FIELD]).isNotNull().isNotEmpty()
-        assertThat(headers[KLIENTID_FIELD]).isNotNull().isNotEmpty()
+        assertThat(headers[USER_AGENT_FIELD]).isEqualTo("test-app")
+        assertThat(headers[KLIENTID_FIELD]).isEqualTo("test-app")
     }
 }
