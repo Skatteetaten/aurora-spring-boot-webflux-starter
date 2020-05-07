@@ -33,8 +33,8 @@ public class AuroraHeaderWebFilter implements WebFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        AuroraField.create(exchange).withName(USER_AGENT_FIELD).withValue(name);
-        AuroraField.create(exchange).withName(KLIENTID_FIELD).withValue(name);
+        AuroraField.create(exchange).withName(USER_AGENT_FIELD).withFixedValue(name);
+        AuroraField.create(exchange).withName(KLIENTID_FIELD).withFixedValue(name);
         AuroraField.create(exchange).withName(MELDINGID_FIELD).withGeneratedId();
         AuroraField.create(exchange).withName(KORRELASJONSID_FIELD).withKorrelasjonsid();
         return chain.filter(exchange);
@@ -51,6 +51,13 @@ public class AuroraHeaderWebFilter implements WebFilter, Ordered {
         AuroraField withName(String name) {
             this.name = name;
             return this;
+        }
+
+        void withFixedValue(String value) {
+            if (value != null) {
+                MDC.remove(name);
+                MDC.put(name, value);
+            }
         }
 
         void withValue(String value) {
