@@ -8,6 +8,7 @@ import assertk.assertions.isNull
 import brave.propagation.ExtraFieldPropagation
 import no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.KORRELASJONSID_FIELD
 import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.slf4j.MDC
@@ -33,6 +34,11 @@ open class TestController {
 }
 
 class AuroraRequestParserTest {
+
+    @BeforeEach
+    fun setUp() {
+        MDC.clear()
+    }
 
     @Nested
     @SpringBootTest(
