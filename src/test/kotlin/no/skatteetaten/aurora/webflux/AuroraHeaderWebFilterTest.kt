@@ -3,14 +3,15 @@ package no.skatteetaten.aurora.webflux
 import assertk.assertThat
 import assertk.assertions.isNotEmpty
 import assertk.assertions.isNotNull
-import no.skatteetaten.aurora.mockmvc.extensions.mockwebserver.execute
-import no.skatteetaten.aurora.mockmvc.extensions.mockwebserver.url
+import no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.KLIENTID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.KORRELASJONSID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.MELDINGID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.USER_AGENT_FIELD
 import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig
+import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
@@ -44,29 +45,32 @@ class AuroraHeaderWebFilterTest {
     @Autowired
     private lateinit var webClient: WebClient
 
+    private val server = MockWebServer()
+
+    @BeforeEach
+    fun setUp() {
+        server.start()
+    }
+
+    @AfterEach
+    fun tearDown() {
+        kotlin.runCatching {
+            server.shutdown()
+        }
+    }
+
     @Test
     fun `Set Aurora headers on request`() {
-        val server = MockWebServer()
-        val request = server.execute("test") {
-            webClient.get().uri(server.url).retrieve().bodyToMono<String>().block()
-        }.first()
+        server.enqueue(MockResponse().setBody("test"))
 
-        val headers = request?.headers!!
+        webClient.get().uri(server.url("/").toString()).retrieve().bodyToMono<String>().block()
+
+        val request = server.takeRequest()
+
+        val headers = request.headers
         assertThat(headers[KORRELASJONSID_FIELD]).isNotNull().isNotEmpty()
         assertThat(headers[MELDINGID_FIELD]).isNotNull().isNotEmpty()
         assertThat(headers[USER_AGENT_FIELD]).isNotNull().isNotEmpty()
-        assertThat(headers[USER_AGENT_FIELD]).isNotNull().isNotEmpty()
-    }
-
-    @Disabled("Not finished")
-    @Test
-    fun `Use same Korrelasjonsid as incoming request header`() {
-        val server = MockWebServer()
-        val request = server.execute("test") {
-            webClient.get().uri(server.url).header(KORRELASJONSID_FIELD, "abc123").retrieve().bodyToMono<String>().block()
-        }.first()
-
-        val headers = request?.headers!!
-        assertThat(headers[KORRELASJONSID_FIELD]).isNotNull().isNotEmpty()
+        assertThat(headers[KLIENTID_FIELD]).isNotNull().isNotEmpty()
     }
 }

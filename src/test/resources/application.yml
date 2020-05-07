@@ -1,0 +1,7 @@
+spring:
+    sleuth:
+        propagation-keys: Korrelasjonsid
+
+management:
+    server:
+        port: -1
