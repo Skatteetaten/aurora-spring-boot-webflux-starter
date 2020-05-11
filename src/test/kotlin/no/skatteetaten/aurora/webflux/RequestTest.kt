@@ -29,7 +29,7 @@ open class TestController {
     fun getText() = mapOf(
         "mdc" to MDC.get(KORRELASJONSID_FIELD),
         "span" to ExtraFieldPropagation.get(KORRELASJONSID_FIELD)
-    )
+    ).also { MDC.clear() }
 }
 
 class AuroraRequestParserTest {
