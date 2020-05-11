@@ -8,7 +8,6 @@ import assertk.assertions.isNull
 import brave.propagation.ExtraFieldPropagation
 import no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.KORRELASJONSID_FIELD
 import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.slf4j.MDC
@@ -48,11 +47,6 @@ class AuroraRequestParserTest {
         @LocalServerPort
         private var port: Int = 0
 
-        @BeforeEach
-        fun setUp() {
-            MDC.clear()
-        }
-
         @Test
         fun `MDC and ExtraFields contains Korrelasjonsid`() {
             val response = sendRequest(port)
@@ -75,11 +69,6 @@ class AuroraRequestParserTest {
     inner class FilterOnly {
         @LocalServerPort
         private var port: Int = 0
-
-        @BeforeEach
-        fun setUp() {
-            MDC.clear()
-        }
 
         @Test
         fun `MDC contains Korrelasjonsid`() {
@@ -109,11 +98,6 @@ class AuroraRequestParserTest {
     inner class SpanOnly {
         @LocalServerPort
         private var port: Int = 0
-
-        @BeforeEach
-        fun setUp() {
-            MDC.clear()
-        }
 
         @Test
         fun `Span contains Korrelasjonsid`() {

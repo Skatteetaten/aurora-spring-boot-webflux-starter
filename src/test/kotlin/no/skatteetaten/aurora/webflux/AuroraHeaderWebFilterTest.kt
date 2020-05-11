@@ -14,7 +14,6 @@ import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.TestConfiguration
@@ -40,7 +39,6 @@ open class TestConfig {
     classes = [WebFluxStarterApplicationConfig::class, TestConfig::class],
     properties = ["aurora.webflux.header.webclient.interceptor.enabled=true"]
 )
-@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class AuroraHeaderWebFilterTest {
 
     @Autowired
