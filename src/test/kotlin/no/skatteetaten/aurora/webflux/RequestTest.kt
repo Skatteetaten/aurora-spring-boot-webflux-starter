@@ -10,6 +10,7 @@ import no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.KORRELASJONSID_FIELD
 import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.test.context.SpringBootTest
@@ -29,7 +30,10 @@ open class TestController {
     fun getText() = mapOf(
         "mdc" to MDC.get(KORRELASJONSID_FIELD),
         "span" to ExtraFieldPropagation.get(KORRELASJONSID_FIELD)
-    ).also { MDC.clear() }
+    ).also {
+        LoggerFactory.getLogger(TestController::class.java).info("Clearing MDC, content: $it")
+        MDC.clear()
+    }
 }
 
 class AuroraRequestParserTest {
