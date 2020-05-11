@@ -35,11 +35,6 @@ open class TestController {
 
 class AuroraRequestParserTest {
 
-    @BeforeEach
-    fun setUp() {
-        MDC.clear()
-    }
-
     @Nested
     @SpringBootTest(
         classes = [TestMain::class, WebFluxStarterApplicationConfig::class],
@@ -52,6 +47,11 @@ class AuroraRequestParserTest {
     inner class FilterAndSpan {
         @LocalServerPort
         private var port: Int = 0
+
+        @BeforeEach
+        fun setUp() {
+            MDC.clear()
+        }
 
         @Test
         fun `MDC and ExtraFields contains Korrelasjonsid`() {
@@ -75,6 +75,11 @@ class AuroraRequestParserTest {
     inner class FilterOnly {
         @LocalServerPort
         private var port: Int = 0
+
+        @BeforeEach
+        fun setUp() {
+            MDC.clear()
+        }
 
         @Test
         fun `MDC contains Korrelasjonsid`() {
@@ -104,6 +109,11 @@ class AuroraRequestParserTest {
     inner class SpanOnly {
         @LocalServerPort
         private var port: Int = 0
+
+        @BeforeEach
+        fun setUp() {
+            MDC.clear()
+        }
 
         @Test
         fun `Span contains Korrelasjonsid`() {
