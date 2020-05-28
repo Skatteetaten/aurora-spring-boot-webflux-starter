@@ -4,6 +4,9 @@ spring:
     sleuth:
         propagation-keys: Korrelasjonsid
 
+server:
+    shutdown: immediate
+
 management:
     server:
         port: -1
