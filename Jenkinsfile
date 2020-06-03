@@ -1,4 +1,6 @@
 #!/usr/bin/env groovy
+env.CI = true
+
 def config = [
     scriptVersion  : 'v7',
     iq: false,

@@ -1,8 +1,13 @@
 spring:
     application:
-        name: test-app
-    sleuth:
-        propagation-keys: Korrelasjonsid
+        name: webflux-starter
+
+aurora:
+    webflux:
+        header:
+            webclient:
+                interceptor:
+                    enabled: true
 
 server:
     shutdown: immediate
@@ -10,3 +15,5 @@ server:
 management:
     server:
         port: -1
+
+logging.level.zipkin2.reporter: ERROR

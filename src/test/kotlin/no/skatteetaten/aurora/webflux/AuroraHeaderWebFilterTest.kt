@@ -69,7 +69,7 @@ class AuroraHeaderWebFilterTest {
         val headers = request.headers
         assertThat(headers[KORRELASJONSID_FIELD]).isNotNull().isNotEmpty()
         assertThat(headers[MELDINGID_FIELD]).isNotNull().isNotEmpty()
-        assertThat(headers[USER_AGENT_FIELD]).isEqualTo("test-app")
-        assertThat(headers[KLIENTID_FIELD]).isEqualTo("test-app")
+        assertThat(headers[USER_AGENT_FIELD]).isEqualTo("webflux-starter")
+        assertThat(headers[KLIENTID_FIELD]).isEqualTo("webflux-starter")
     }
 }
