@@ -4,6 +4,7 @@ import brave.propagation.ExtraFieldPropagation
 import no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.KLIENTID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.KORRELASJONSID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.MELDINGID_FIELD
+import org.slf4j.MDC
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
@@ -39,6 +40,7 @@ open class TestController(private val webClient: WebClient) {
     fun get(): Mono<Map<String, Any>> {
         val korrelasjonsid = ExtraFieldPropagation.get(KORRELASJONSID_FIELD)
         checkNotNull(korrelasjonsid)
+        check(korrelasjonsid == MDC.get(KORRELASJONSID_FIELD))
 
         return webClient.get().uri("/headers").retrieve().bodyToMono<Map<String, String>>().map {
             mapOf(
