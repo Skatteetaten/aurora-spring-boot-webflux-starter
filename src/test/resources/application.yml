@@ -1,4 +1,19 @@
-aurora:
-    db: mydb
+spring:
+    application:
+        name: webflux-starter
 
-MYDB_DB_PROPERTIES: src/test/resources/db.properties
+aurora:
+    webflux:
+        header:
+            webclient:
+                interceptor:
+                    enabled: true
+
+server:
+    shutdown: immediate
+
+management:
+    server:
+        port: -1
+
+logging.level.zipkin2.reporter: ERROR
