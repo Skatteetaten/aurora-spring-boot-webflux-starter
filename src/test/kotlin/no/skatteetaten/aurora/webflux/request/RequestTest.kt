@@ -1,4 +1,4 @@
-package no.skatteetaten.aurora.webflux
+package no.skatteetaten.aurora.webflux.request
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
@@ -21,26 +21,26 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 
 @SpringBootApplication
-open class TestMain
+open class RequestTestMain
 
 @RestController
-open class TestController {
+open class RequestTestController {
 
     @GetMapping
     fun getText() = mapOf(
         "mdc" to MDC.get(KORRELASJONSID_FIELD),
         "span" to ExtraFieldPropagation.get(KORRELASJONSID_FIELD)
     ).also {
-        LoggerFactory.getLogger(TestController::class.java).info("Clearing MDC, content: $it")
+        LoggerFactory.getLogger(RequestTestController::class.java).info("Clearing MDC, content: $it")
         MDC.clear()
     }
 }
 
-class AuroraRequestParserTest {
+class RequestTest {
 
     @Nested
     @SpringBootTest(
-        classes = [TestMain::class, WebFluxStarterApplicationConfig::class],
+        classes = [RequestTestMain::class, WebFluxStarterApplicationConfig::class],
         properties = [
             "aurora.webflux.header.filter.enabled=true",
             "aurora.webflux.header.span.interceptor.enabled=true"
@@ -63,7 +63,7 @@ class AuroraRequestParserTest {
 
     @Nested
     @SpringBootTest(
-        classes = [TestMain::class, WebFluxStarterApplicationConfig::class],
+        classes = [RequestTestMain::class, WebFluxStarterApplicationConfig::class],
         properties = [
             "aurora.webflux.header.filter.enabled=true",
             "aurora.webflux.header.span.interceptor.enabled=false"
@@ -92,7 +92,7 @@ class AuroraRequestParserTest {
 
     @Nested
     @SpringBootTest(
-        classes = [TestMain::class, WebFluxStarterApplicationConfig::class],
+        classes = [RequestTestMain::class, WebFluxStarterApplicationConfig::class],
         properties = [
             "aurora.webflux.header.filter.enabled=false",
             "aurora.webflux.header.span.interceptor.enabled=true"
