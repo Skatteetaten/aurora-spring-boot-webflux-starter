@@ -42,6 +42,7 @@ class RequestTest {
     @SpringBootTest(
         classes = [RequestTestMain::class, WebFluxStarterApplicationConfig::class],
         properties = [
+            "spring.zipkin.enabled=true",
             "aurora.webflux.header.filter.enabled=true",
             "aurora.webflux.header.span.interceptor.enabled=true"
         ],
@@ -65,6 +66,7 @@ class RequestTest {
     @SpringBootTest(
         classes = [RequestTestMain::class, WebFluxStarterApplicationConfig::class],
         properties = [
+            "spring.zipkin.enabled=true",
             "aurora.webflux.header.filter.enabled=true",
             "aurora.webflux.header.span.interceptor.enabled=false"
         ],
@@ -94,6 +96,7 @@ class RequestTest {
     @SpringBootTest(
         classes = [RequestTestMain::class, WebFluxStarterApplicationConfig::class],
         properties = [
+            "spring.zipkin.enabled=true",
             "aurora.webflux.header.filter.enabled=false",
             "aurora.webflux.header.span.interceptor.enabled=true"
         ],
