@@ -59,7 +59,7 @@
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
 
-    <basestarter.version>1.0-SNAPSHOT</basestarter.version>
+    <basestarter.version>1.0.12</basestarter.version>
     <springboot.version>2.3.0.RELEASE</springboot.version>
 
     <kotlin.version>1.3.72</kotlin.version>
