@@ -52,7 +52,7 @@ open class TestConfig {
 @Testcontainers
 @SpringBootTest(
     classes = [TestConfig::class, TestMain::class, WebFluxStarterApplicationConfig::class],
-    properties = ["aurora.mvc.header.span.interceptor.enabled=true"],
+    properties = ["spring.zipkin.enabled=true", "aurora.mvc.header.span.interceptor.enabled=true"],
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 class ZipkinIntegrationTest {
