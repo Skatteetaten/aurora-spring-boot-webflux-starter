@@ -12,6 +12,8 @@ def config = [
     docs: false,
     sonarQube: false,
     pipelineScript : 'https://git.aurora.skead.no/scm/ao/aurora-pipeline-scripts.git',
+    pomPath: 'webflux-starter/pom.xml',
+    mavenBuildCommand: 'compile -pl webflux-starter',
     versionStrategy : [
         [branch: 'master', versionHint: '1']
     ]
