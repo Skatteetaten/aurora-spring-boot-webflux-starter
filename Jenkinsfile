@@ -12,7 +12,7 @@ def config = [
     docs: false,
     sonarQube: false,
     pipelineScript : 'https://git.aurora.skead.no/scm/ao/aurora-pipeline-scripts.git',
-    deployProperties: '-pl webflux-starter ',
+    pomPath: 'webflux-starter/pom.xml',
     jacoco: false,
     versionStrategy : [
         [branch: 'master', versionHint: '1']
