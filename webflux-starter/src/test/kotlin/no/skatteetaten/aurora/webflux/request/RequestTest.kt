@@ -5,8 +5,8 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isNotEmpty
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
-import brave.propagation.ExtraFieldPropagation
-import no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.KORRELASJONSID_FIELD
+import brave.baggage.BaggageField
+import no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD
 import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -29,7 +29,7 @@ open class RequestTestController {
     @GetMapping
     fun getText() = mapOf(
         "mdc" to MDC.get(KORRELASJONSID_FIELD),
-        "span" to ExtraFieldPropagation.get(KORRELASJONSID_FIELD)
+        "span" to BaggageField.getByName(KORRELASJONSID_FIELD).value
     ).also {
         LoggerFactory.getLogger(RequestTestController::class.java).info("Clearing MDC, content: $it")
         MDC.clear()
@@ -43,21 +43,25 @@ class RequestTest {
         classes = [RequestTestMain::class, WebFluxStarterApplicationConfig::class],
         properties = [
             "spring.zipkin.enabled=true",
-            "aurora.webflux.header.filter.enabled=true",
-            "aurora.webflux.header.span.interceptor.enabled=true"
+            "aurora.webflux.header.filter.enabled=true"
         ],
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
     )
-    inner class FilterAndSpan {
+    inner class FilterEnabled {
         @LocalServerPort
         private var port: Int = 0
 
         @Test
-        fun `MDC and ExtraFields contains Korrelasjonsid`() {
+        fun `MDC and BaggageField is not empty`() {
             val response = sendRequest(port)
 
             assertThat(response["mdc"]).isNotNull().isNotEmpty()
             assertThat(response["span"]).isNotNull().isNotEmpty()
+        }
+
+        @Test
+        fun `MDC and BaggageField is equal`() {
+            val response = sendRequest(port)
             assertThat(response["mdc"]).isEqualTo(response["span"])
         }
     }
@@ -67,51 +71,20 @@ class RequestTest {
         classes = [RequestTestMain::class, WebFluxStarterApplicationConfig::class],
         properties = [
             "spring.zipkin.enabled=true",
-            "aurora.webflux.header.filter.enabled=true",
-            "aurora.webflux.header.span.interceptor.enabled=false"
+            "aurora.webflux.header.filter.enabled=false"
         ],
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
     )
-    inner class FilterOnly {
+    inner class FilterDisabled {
         @LocalServerPort
         private var port: Int = 0
 
         @Test
-        fun `MDC contains Korrelasjonsid`() {
-            val response = sendRequest(port)
-
-            assertThat(response["mdc"]).isNotNull().isNotEmpty()
-            assertThat(response["span"]).isNull()
-        }
-
-        @Test
-        fun `MDC contains same Korrelasjonsid as incoming request`() {
-            val response = sendRequest(port, mapOf(KORRELASJONSID_FIELD to "abc123"))
-
-            assertThat(response["mdc"]).isEqualTo("abc123")
-        }
-    }
-
-    @Nested
-    @SpringBootTest(
-        classes = [RequestTestMain::class, WebFluxStarterApplicationConfig::class],
-        properties = [
-            "spring.zipkin.enabled=true",
-            "aurora.webflux.header.filter.enabled=false",
-            "aurora.webflux.header.span.interceptor.enabled=true"
-        ],
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-    )
-    inner class SpanOnly {
-        @LocalServerPort
-        private var port: Int = 0
-
-        @Test
-        fun `Span contains Korrelasjonsid`() {
+        fun `MDC and Korrelasjonsid is null`() {
             val response = sendRequest(port)
 
             assertThat(response["mdc"]).isNull()
-            assertThat(response["span"]).isNotNull().isNotEmpty()
+            assertThat(response["span"]).isNull()
         }
     }
 

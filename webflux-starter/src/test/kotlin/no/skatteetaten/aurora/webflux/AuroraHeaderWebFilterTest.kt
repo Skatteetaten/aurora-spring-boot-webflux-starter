@@ -4,10 +4,10 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotEmpty
 import assertk.assertions.isNotNull
-import no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.KLIENTID_FIELD
-import no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.KORRELASJONSID_FIELD
-import no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.MELDINGID_FIELD
-import no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.USER_AGENT_FIELD
+import no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD
+import no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD
+import no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGID_FIELD
+import no.skatteetaten.aurora.webflux.AuroraRequestParser.USER_AGENT_FIELD
 import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer

@@ -2,16 +2,18 @@ package no.skatteetaten.aurora.webflux;
 
 import static java.util.UUID.randomUUID;
 import static org.springframework.web.reactive.function.client.ClientRequest.from;
-import static brave.propagation.ExtraFieldPropagation.get;
-import static no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.KLIENTID_FIELD;
-import static no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.KORRELASJONSID_FIELD;
-import static no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.MELDINGID_FIELD;
-import static no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.USER_AGENT_FIELD;
+
+import static no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD;
+import static no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD;
+import static no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGID_FIELD;
+import static no.skatteetaten.aurora.webflux.AuroraRequestParser.USER_AGENT_FIELD;
 
 import java.util.UUID;
 
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import brave.baggage.BaggageField;
 
 public class AuroraWebClientCustomizer implements WebClientCustomizer {
     private final String name;
@@ -34,10 +36,10 @@ public class AuroraWebClientCustomizer implements WebClientCustomizer {
     }
 
     private String getKorrelasjonsid() {
-        String id = get(KORRELASJONSID_FIELD);
-        if (id == null) {
+        BaggageField field = BaggageField.getByName(KORRELASJONSID_FIELD);
+        if (field == null) {
             return UUID.randomUUID().toString();
         }
-        return id;
+        return field.getValue();
     }
 }

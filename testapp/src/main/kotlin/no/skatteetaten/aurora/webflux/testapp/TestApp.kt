@@ -1,9 +1,11 @@
 package no.skatteetaten.aurora.webflux.testapp
 
-import brave.propagation.ExtraFieldPropagation
-import no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.KLIENTID_FIELD
-import no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.KORRELASJONSID_FIELD
-import no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter.MELDINGID_FIELD
+import brave.baggage.BaggageField
+import kotlinx.coroutines.reactive.awaitSingle
+import mu.KotlinLogging
+import no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD
+import no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD
+import no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGID_FIELD
 import org.slf4j.MDC
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -18,36 +20,44 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 import reactor.core.publisher.Mono
 
-// Default profile will connect to zipkin (run docker-compose to start local zipkin)
-// Start with no-zipkin profile to disable zipkin integration
+// Default profile disables zipkin integration, to enable zipkin start with the zipkin profile
+// run docker-compose to start local zipkin
 @SpringBootApplication
-open class TestMain
+class TestMain
 
 fun main(args: Array<String>) {
     SpringApplication.run(TestMain::class.java, *args)
 }
 
 @Configuration
-open class TestConfig {
+class TestConfig {
     @Bean
-    open fun webClient(builder: WebClient.Builder) = builder.baseUrl("http://localhost:8080").build()
+    fun webClient(builder: WebClient.Builder) = builder.baseUrl("http://localhost:8080").build()
 }
 
+private val logger = KotlinLogging.logger {}
+
 @RestController
-open class TestController(private val webClient: WebClient) {
+class TestController(private val webClient: WebClient) {
 
     @GetMapping
     fun get(): Mono<Map<String, Any>> {
-        val korrelasjonsid = ExtraFieldPropagation.get(KORRELASJONSID_FIELD)
+        val korrelasjonsid = BaggageField.getByName(KORRELASJONSID_FIELD)
         checkNotNull(korrelasjonsid)
-        check(korrelasjonsid == MDC.get(KORRELASJONSID_FIELD))
+        check(korrelasjonsid.getValue() == MDC.get(KORRELASJONSID_FIELD))
 
+        logger.info("Get request")
         return webClient.get().uri("/headers").retrieve().bodyToMono<Map<String, String>>().map {
             mapOf(
                 "Korrelasjonsid fra WebFilter" to korrelasjonsid,
                 "Request headers fra WebClient" to it
             )
         }
+    }
+
+    @GetMapping("/suspended")
+    suspend fun getSuspended() = get().awaitSingle().also {
+        logger.info("Suspended function called")
     }
 
     @GetMapping("/headers")

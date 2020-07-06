@@ -9,29 +9,24 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import brave.http.HttpRequestParser;
-import no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter;
 import no.skatteetaten.aurora.webflux.AuroraRequestParser;
 import no.skatteetaten.aurora.webflux.AuroraWebClientCustomizer;
 
 @EnableConfigurationProperties(WebFluxStarterProperties.class)
 @Configuration
 public class WebFluxStarterApplicationConfig {
-
-    @Bean
-    @ConditionalOnProperty(prefix = "aurora.webflux.header.filter", name = "enabled", matchIfMissing = true)
-    public AuroraHeaderWebFilter auroraHeaderWebFilter(@Value("${spring.application.name}") String name) {
-        return new AuroraHeaderWebFilter(name);
-    }
+    @Value("${spring.application.name}")
+    private String name;
 
     @Bean
     @ConditionalOnProperty(prefix = "aurora.webflux.header.webclient.interceptor", name = "enabled")
-    public WebClientCustomizer webClientCustomizer(@Value("${spring.application.name}") String name) {
+    public WebClientCustomizer webClientCustomizer() {
         return new AuroraWebClientCustomizer(name);
     }
 
     @Bean(HttpServerRequestParser.NAME)
-    @ConditionalOnProperty(prefix = "aurora.webflux.header.span.interceptor", name = "enabled", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = "aurora.webflux.header.filter", name = "enabled", matchIfMissing = true)
     public HttpRequestParser sleuthHttpServerRequestParser() {
-        return new AuroraRequestParser();
+        return new AuroraRequestParser(name);
     }
 }
