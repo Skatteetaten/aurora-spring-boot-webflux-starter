@@ -3,16 +3,13 @@ package no.skatteetaten.aurora.webflux.config
 import assertk.assertThat
 import assertk.assertions.isNull
 import no.skatteetaten.aurora.webflux.AuroraRequestParser
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
-@Nested
 @SpringBootTest(
-    classes = [WebFluxStarterApplicationConfig::class], properties = [
-        "aurora.webflux.header.filter.enabled=false"
-    ]
+    classes = [WebFluxStarterApplicationConfig::class],
+    properties = ["aurora.webflux.header.filter.enabled=false"]
 )
 class WebFluxStarterApplicationConfigTest {
 
