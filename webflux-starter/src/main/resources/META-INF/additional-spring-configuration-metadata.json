@@ -25,19 +25,6 @@
           "description": "Disables the WebClient interceptor."
         }
       ]
-    },
-    {
-      "name": "aurora.webflux.header.span.interceptor.enabled",
-      "values": [
-        {
-          "value": "true",
-          "description": "Enables the Zipkin span interceptor, which will add Korrelasjonsid as a tag in the span."
-        },
-        {
-          "value": "false",
-          "description": "Disables the Zipkin span interceptor."
-        }
-      ]
     }
   ]
 }
