@@ -41,7 +41,7 @@ open class AuroraRequestParserTestController {
 @SpringBootTest(
     classes = [AuroraRequestParserMain::class, WebFluxStarterApplicationConfig::class],
     properties = [
-        "spring.zipkin.enabled=true",
+        "spring.zipkin.enabled=false",
         "aurora.webflux.header.filter.enabled=true"
     ],
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
