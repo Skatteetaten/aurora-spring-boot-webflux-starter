@@ -9,7 +9,9 @@ import no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGID_FIELD
 import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig
+import no.skatteetaten.aurora.webflux.request.RequestTestController
 import org.junit.jupiter.api.Test
+import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.test.context.SpringBootTest
@@ -30,7 +32,10 @@ open class AuroraRequestParserTestController {
         KORRELASJONSID_FIELD to MDC.get(KORRELASJONSID_FIELD),
         MELDINGID_FIELD to MDC.get(MELDINGID_FIELD),
         KLIENTID_FIELD to MDC.get(KLIENTID_FIELD)
-    )
+    ).also {
+        LoggerFactory.getLogger(AuroraRequestParserTestController::class.java).info("Clearing MDC, content: $it")
+        MDC.clear()
+    }
 }
 
 @SpringBootTest(
