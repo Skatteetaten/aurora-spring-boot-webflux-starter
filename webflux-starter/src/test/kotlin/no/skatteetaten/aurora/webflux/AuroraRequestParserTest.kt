@@ -16,6 +16,7 @@ import org.slf4j.MDC
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
+import org.springframework.test.annotation.DirtiesContext
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.reactive.function.client.WebClient
@@ -38,6 +39,7 @@ open class AuroraRequestParserTestController {
     }
 }
 
+@DirtiesContext
 @SpringBootTest(
     classes = [AuroraRequestParserMain::class, WebFluxStarterApplicationConfig::class],
     properties = [
