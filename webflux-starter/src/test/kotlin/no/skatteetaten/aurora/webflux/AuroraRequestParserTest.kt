@@ -4,12 +4,10 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotEmpty
 import assertk.assertions.isNotNull
-import assertk.assertions.isNull
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGID_FIELD
 import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
@@ -34,6 +32,7 @@ open class AuroraRequestParserTestController {
         KLIENTID_FIELD to MDC.get(KLIENTID_FIELD)
     ).also {
         LoggerFactory.getLogger(AuroraRequestParserTestController::class.java).info("MDC content: $it")
+        MDC.clear()
     }
 }
 
@@ -49,38 +48,18 @@ class AuroraRequestParserTest {
     @LocalServerPort
     private var port: Int = 0
 
-    @AfterEach
-    fun tearDown() {
-        MDC.clear()
-    }
-
     @Test
-    fun `Given no request headers set Korrelasjonsid only on MDC`() {
+    fun `Given request headers set same values on MDC and generate Korrelasjonsid`() {
         val requestHeaders =
             WebClient.create("http://localhost:$port/mdc")
                 .get()
-                .retrieve()
-                .bodyToMono<Map<String, String>>()
-                .block()!!
-
-        assertThat(requestHeaders[KORRELASJONSID_FIELD]).isNotNull().isNotEmpty()
-        assertThat(requestHeaders[MELDINGID_FIELD]).isNull()
-        assertThat(requestHeaders[KLIENTID_FIELD]).isNull()
-    }
-
-    @Test
-    fun `Given request headers set same values on MDC`() {
-        val requestHeaders =
-            WebClient.create("http://localhost:$port/mdc")
-                .get()
-                .header(KORRELASJONSID_FIELD, "korrelasjonsid")
                 .header(MELDINGID_FIELD, "meldingsid")
                 .header(KLIENTID_FIELD, "klientid")
                 .retrieve()
                 .bodyToMono<Map<String, String>>()
                 .block()!!
 
-        assertThat(requestHeaders[KORRELASJONSID_FIELD]).isEqualTo("korrelasjonsid")
+        assertThat(requestHeaders[KORRELASJONSID_FIELD]).isNotNull().isNotEmpty()
         assertThat(requestHeaders[MELDINGID_FIELD]).isEqualTo("meldingsid")
         assertThat(requestHeaders[KLIENTID_FIELD]).isEqualTo("klientid")
     }
