@@ -9,14 +9,13 @@ import no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGID_FIELD
 import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig
-import no.skatteetaten.aurora.webflux.request.RequestTestController
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
-import org.springframework.test.annotation.DirtiesContext
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.reactive.function.client.WebClient
@@ -34,12 +33,10 @@ open class AuroraRequestParserTestController {
         MELDINGID_FIELD to MDC.get(MELDINGID_FIELD),
         KLIENTID_FIELD to MDC.get(KLIENTID_FIELD)
     ).also {
-        LoggerFactory.getLogger(AuroraRequestParserTestController::class.java).info("Clearing MDC, content: $it")
-        MDC.clear()
+        LoggerFactory.getLogger(AuroraRequestParserTestController::class.java).info("MDC content: $it")
     }
 }
 
-@DirtiesContext
 @SpringBootTest(
     classes = [AuroraRequestParserMain::class, WebFluxStarterApplicationConfig::class],
     properties = [
@@ -51,6 +48,11 @@ open class AuroraRequestParserTestController {
 class AuroraRequestParserTest {
     @LocalServerPort
     private var port: Int = 0
+
+    @AfterEach
+    fun tearDown() {
+        MDC.clear()
+    }
 
     @Test
     fun `Given no request headers set Korrelasjonsid only on MDC`() {
