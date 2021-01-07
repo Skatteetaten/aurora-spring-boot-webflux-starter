@@ -4,6 +4,7 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotEmpty
 import assertk.assertions.isNotNull
+import assertk.assertions.isNull
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGID_FIELD
@@ -49,7 +50,7 @@ class AuroraRequestParserTest {
     private var port: Int = 0
 
     @Test
-    fun `Given request headers set same values on MDC and generate Korrelasjonsid`() {
+    fun `Given request headers set same values on MDC and generate Korrelasjonsid fails if zipkin disabled`() {
         val requestHeaders =
             WebClient.create("http://localhost:$port/mdc")
                 .get()
@@ -59,8 +60,8 @@ class AuroraRequestParserTest {
                 .bodyToMono<Map<String, String>>()
                 .block()!!
 
-        assertThat(requestHeaders[KORRELASJONSID_FIELD]).isNotNull().isNotEmpty()
-        assertThat(requestHeaders[MELDINGID_FIELD]).isEqualTo("meldingsid")
-        assertThat(requestHeaders[KLIENTID_FIELD]).isEqualTo("klientid")
+        assertThat(requestHeaders[KORRELASJONSID_FIELD]).isNull()
+        assertThat(requestHeaders[MELDINGID_FIELD]).isNull()
+        assertThat(requestHeaders[KLIENTID_FIELD]).isNull()
     }
 }
