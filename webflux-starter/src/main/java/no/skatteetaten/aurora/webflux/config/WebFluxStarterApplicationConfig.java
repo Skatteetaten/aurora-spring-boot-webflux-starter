@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 
 import brave.http.HttpRequestParser;
 import no.skatteetaten.aurora.webflux.AuroraRequestParser;
+import no.skatteetaten.aurora.webflux.AuroraSpanHandler;
 import no.skatteetaten.aurora.webflux.AuroraWebClientCustomizer;
 
 @EnableConfigurationProperties(WebFluxStarterProperties.class)
@@ -25,5 +26,11 @@ public class WebFluxStarterApplicationConfig {
     @ConditionalOnProperty(prefix = "aurora.webflux.header.filter", name = "enabled", matchIfMissing = true)
     public HttpRequestParser sleuthHttpServerRequestParser() {
         return new AuroraRequestParser();
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "spring.zipkin", name = "enabled", havingValue = "false", matchIfMissing = true)
+    public AuroraSpanHandler auroraSpanHandler() {
+        return new AuroraSpanHandler();
     }
 }
