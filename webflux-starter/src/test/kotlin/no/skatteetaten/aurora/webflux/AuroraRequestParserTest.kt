@@ -49,7 +49,7 @@ class AuroraRequestParserTest {
     private var port: Int = 0
 
     @Test
-    fun `Given request headers set same values on MDC and generate Korrelasjonsid`() {
+    fun `Given request headers set same values on MDC and generate Korrelasjonsid fails if zipkin disabled`() {
         val requestHeaders =
             WebClient.create("http://localhost:$port/mdc")
                 .get()

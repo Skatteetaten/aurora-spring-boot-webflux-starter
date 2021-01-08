@@ -1,1 +1,3 @@
-spring.zipkin.enabled: true
+spring:
+    zipkin:
+        enabled: true

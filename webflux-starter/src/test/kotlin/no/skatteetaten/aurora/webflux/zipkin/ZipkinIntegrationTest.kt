@@ -29,6 +29,7 @@ import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
+import reactor.core.publisher.Mono
 import java.time.Duration
 
 class KGenericContainer(imageName: String) : GenericContainer<KGenericContainer>(imageName)
@@ -83,7 +84,7 @@ class ZipkinIntegrationTest {
 
     @Test
     fun `Request registers tracing data in zipkin`() {
-        webClient.get().uri("http://localhost:$port/test").exchange().block()
+        webClient.get().uri("http://localhost:$port/test").exchangeToMono { Mono.just(it) }.block()
 
         await()
             .withPollDelay(Duration.ofSeconds(1)) // Wait initial
@@ -95,7 +96,7 @@ class ZipkinIntegrationTest {
             } has { size() > 0 }
 
         val traces = webClient.get().uri("http://localhost:${zipkin.firstMappedPort}/api/v2/traces").retrieve()
-            .bodyToMono<JsonNode>().block()
+            .bodyToMono<JsonNode>().block()!!
 
         assertThat(traces).containsKorrelasjonsidTag()
     }

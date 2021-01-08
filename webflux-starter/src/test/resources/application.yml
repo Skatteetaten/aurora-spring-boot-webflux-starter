@@ -1,6 +1,9 @@
 spring:
     application:
         name: webflux-starter
+    sleuth:
+        sampler:
+            probability: 1.0
 
 aurora:
     webflux:

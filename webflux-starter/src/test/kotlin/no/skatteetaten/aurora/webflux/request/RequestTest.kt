@@ -102,7 +102,7 @@ class RequestTest {
         private var port: Int = 0
 
         @Test
-        fun `Korrelasjonsid is set`() {
+        fun `Korrelasjonsid is set with filter if zipkin disabled`() {
             val response = sendRequest(port)
 
             assertThat(response["mdc"]).isNotNull().isNotEmpty()
