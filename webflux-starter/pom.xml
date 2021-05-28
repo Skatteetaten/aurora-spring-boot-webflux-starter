@@ -21,7 +21,7 @@
 
     <basestarter.version>1.2.2</basestarter.version>
     <springboot.version>2.5.0</springboot.version>
-    <springcloud.release.train.version>2020.0.0</springcloud.release.train.version>
+    <springcloud.release.train.version>2020.0.2</springcloud.release.train.version>
     <kotlin.version>1.5.10</kotlin.version>
     <kotlin.code.style>official</kotlin.code.style>
     <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
