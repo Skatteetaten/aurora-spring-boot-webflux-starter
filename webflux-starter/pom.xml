@@ -19,7 +19,7 @@
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
 
-    <basestarter.version>1.2.4</basestarter.version>
+    <basestarter.version>1.2.5</basestarter.version>
     <springboot.version>2.5.0</springboot.version>
     <springcloud.release.train.version>2020.0.2</springcloud.release.train.version>
     <kotlin.version>1.5.10</kotlin.version>
@@ -241,7 +241,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.4</version>
+        <version>0.8.7</version>
         <configuration>
           <destFile>${sonar.jacoco.reportPaths}</destFile>
           <append>true</append>
