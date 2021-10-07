@@ -1,6 +1,6 @@
 # Aurora Spring Boot WebFlux Starter
 
-A Spring Boot (2.5.3) starter for WebFlux related functionality.
+A Spring Boot (2.5.5) starter for WebFlux related functionality.
 This starter is has a dependency on the [base-starter](https://github.com/Skatteetaten/aurora-spring-boot-base-starter).
 
 ## How to use
