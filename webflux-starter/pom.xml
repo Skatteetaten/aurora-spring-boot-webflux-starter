@@ -19,7 +19,7 @@
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
 
-    <basestarter.version>1.3.2</basestarter.version>
+    <basestarter.version>1.3.3</basestarter.version>
     <springboot.version>2.6.1</springboot.version>
     <springcloud.release.train.version>2021.0.0</springcloud.release.train.version>
     <kotlin.version>1.6.10</kotlin.version>
