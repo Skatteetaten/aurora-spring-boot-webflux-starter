@@ -44,7 +44,7 @@ class TestController(private val webClient: WebClient) {
     fun get(): Mono<Map<String, Any>> {
         val korrelasjonsid = BaggageField.getByName(KORRELASJONSID_FIELD)
         checkNotNull(korrelasjonsid)
-        check(korrelasjonsid.getValue() == MDC.get(KORRELASJONSID_FIELD))
+        check(korrelasjonsid.value == MDC.get(KORRELASJONSID_FIELD))
 
         logger.info("Get request")
         return webClient.get().uri("/headers").retrieve().bodyToMono<Map<String, String>>().map {
