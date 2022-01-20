@@ -5,7 +5,7 @@ import kotlinx.coroutines.reactive.awaitSingle
 import mu.KotlinLogging
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD
-import no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGID_FIELD
+import no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGSID_FIELD
 import org.slf4j.MDC
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -44,7 +44,7 @@ class TestController(private val webClient: WebClient) {
     fun get(): Mono<Map<String, Any>> {
         val korrelasjonsid = BaggageField.getByName(KORRELASJONSID_FIELD)
         checkNotNull(korrelasjonsid)
-        check(korrelasjonsid.getValue() == MDC.get(KORRELASJONSID_FIELD))
+        check(korrelasjonsid.value == MDC.get(KORRELASJONSID_FIELD))
 
         logger.info("Get request")
         return webClient.get().uri("/headers").retrieve().bodyToMono<Map<String, String>>().map {
@@ -63,9 +63,12 @@ class TestController(private val webClient: WebClient) {
     @GetMapping("/headers")
     fun getHeaders(@RequestHeader headers: HttpHeaders): Map<String, String> {
         checkNotNull(headers[KORRELASJONSID_FIELD])
-        checkNotNull(headers[MELDINGID_FIELD])
+        checkNotNull(headers[MELDINGSID_FIELD])
         checkNotNull(headers[KLIENTID_FIELD])
         checkNotNull(headers[USER_AGENT])
-        return headers.toSingleValueMap()
+        logger.info("MDC: ${MDC.get("Korrelasjonsid")}")
+        return headers.toSingleValueMap().toMutableMap().apply {
+            put("MDC-$KORRELASJONSID_FIELD", MDC.get("Korrelasjonsid"))
+        }
     }
 }

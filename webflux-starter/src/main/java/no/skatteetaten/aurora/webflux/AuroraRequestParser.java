@@ -16,7 +16,7 @@ public class AuroraRequestParser implements HttpRequestParser {
 
     public static final String USER_AGENT_FIELD = "User-Agent";
     public static final String KORRELASJONSID_FIELD = "Korrelasjonsid";
-    public static final String MELDINGID_FIELD = "Meldingsid";
+    public static final String MELDINGSID_FIELD = "Meldingsid";
     public static final String KLIENTID_FIELD = "Klientid";
 
     public static final String TAG_KORRELASJONS_ID = "aurora." + KORRELASJONSID_FIELD.toLowerCase();
@@ -26,9 +26,9 @@ public class AuroraRequestParser implements HttpRequestParser {
         HttpRequestParser.DEFAULT.parse(req, context, span);
         logger.debug("populating MDC fields");
 
-        String meldingsid = req.header(MELDINGID_FIELD);
+        String meldingsid = req.header(MELDINGSID_FIELD);
         if (meldingsid != null) {
-            BaggageField.create(MELDINGID_FIELD).updateValue(context, meldingsid);
+            BaggageField.create(MELDINGSID_FIELD).updateValue(context, meldingsid);
         }
 
         String klientid = req.header(KLIENTID_FIELD);

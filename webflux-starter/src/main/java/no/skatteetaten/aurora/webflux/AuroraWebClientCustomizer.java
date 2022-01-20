@@ -5,7 +5,7 @@ import static org.springframework.web.reactive.function.client.ClientRequest.fro
 
 import static no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD;
 import static no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD;
-import static no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGID_FIELD;
+import static no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGSID_FIELD;
 import static no.skatteetaten.aurora.webflux.AuroraRequestParser.USER_AGENT_FIELD;
 
 import java.util.UUID;
@@ -29,13 +29,13 @@ public class AuroraWebClientCustomizer implements WebClientCustomizer {
             .defaultHeader(KLIENTID_FIELD, name)
             .filter((request, next) -> next.exchange(
                 from(request)
-                    .header(MELDINGID_FIELD, randomUUID().toString())
-                    .header(KORRELASJONSID_FIELD, getKorrelasjonsid())
+                    .header(MELDINGSID_FIELD, randomUUID().toString())
+                    .header(KORRELASJONSID_FIELD, addCorrelationId())
                     .build()
             ));
     }
 
-    private String getKorrelasjonsid() {
+    protected String addCorrelationId() {
         BaggageField field = BaggageField.getByName(KORRELASJONSID_FIELD);
         if (field == null) {
             return UUID.randomUUID().toString();

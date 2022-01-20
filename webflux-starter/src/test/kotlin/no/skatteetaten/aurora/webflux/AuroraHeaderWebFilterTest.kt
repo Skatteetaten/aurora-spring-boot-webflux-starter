@@ -6,7 +6,7 @@ import assertk.assertions.isNotEmpty
 import assertk.assertions.isNotNull
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD
-import no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGID_FIELD
+import no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGSID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.USER_AGENT_FIELD
 import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig
 import okhttp3.mockwebserver.MockResponse
@@ -68,7 +68,7 @@ class AuroraHeaderWebFilterTest {
 
         val headers = request.headers
         assertThat(headers[KORRELASJONSID_FIELD]).isNotNull().isNotEmpty()
-        assertThat(headers[MELDINGID_FIELD]).isNotNull().isNotEmpty()
+        assertThat(headers[MELDINGSID_FIELD]).isNotNull().isNotEmpty()
         assertThat(headers[USER_AGENT_FIELD]).isEqualTo("webflux-starter")
         assertThat(headers[KLIENTID_FIELD]).isEqualTo("webflux-starter")
     }

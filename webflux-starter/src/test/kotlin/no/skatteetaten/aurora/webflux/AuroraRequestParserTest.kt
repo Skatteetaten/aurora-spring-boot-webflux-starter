@@ -6,7 +6,7 @@ import assertk.assertions.isNotEmpty
 import assertk.assertions.isNotNull
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD
-import no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGID_FIELD
+import no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGSID_FIELD
 import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig
 import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
@@ -28,7 +28,7 @@ open class AuroraRequestParserTestController {
     @GetMapping("/mdc")
     fun getMdcValues() = mapOf(
         KORRELASJONSID_FIELD to MDC.get(KORRELASJONSID_FIELD),
-        MELDINGID_FIELD to MDC.get(MELDINGID_FIELD),
+        MELDINGSID_FIELD to MDC.get(MELDINGSID_FIELD),
         KLIENTID_FIELD to MDC.get(KLIENTID_FIELD)
     ).also {
         LoggerFactory.getLogger(AuroraRequestParserTestController::class.java).info("MDC content: $it")
@@ -53,14 +53,14 @@ class AuroraRequestParserTest {
         val requestHeaders =
             WebClient.create("http://localhost:$port/mdc")
                 .get()
-                .header(MELDINGID_FIELD, "meldingsid")
+                .header(MELDINGSID_FIELD, "meldingsid")
                 .header(KLIENTID_FIELD, "klientid")
                 .retrieve()
                 .bodyToMono<Map<String, String>>()
                 .block()!!
 
         assertThat(requestHeaders[KORRELASJONSID_FIELD]).isNotNull().isNotEmpty()
-        assertThat(requestHeaders[MELDINGID_FIELD]).isEqualTo("meldingsid")
+        assertThat(requestHeaders[MELDINGSID_FIELD]).isEqualTo("meldingsid")
         assertThat(requestHeaders[KLIENTID_FIELD]).isEqualTo("klientid")
     }
 }
