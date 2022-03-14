@@ -1,6 +1,7 @@
 package no.skatteetaten.aurora.webflux.testapp
 
-import brave.baggage.BaggageField
+import io.opentelemetry.api.baggage.Baggage
+import io.opentelemetry.exporter.otlp.http.trace.OtlpHttpSpanExporter
 import kotlinx.coroutines.reactive.awaitSingle
 import mu.KotlinLogging
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD
@@ -9,6 +10,8 @@ import no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGSID_FIELD
 import org.slf4j.MDC
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.cloud.sleuth.BaggageInScope
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 import reactor.core.publisher.Mono
+import java.time.Duration
 
 // Default profile disables zipkin integration, to enable zipkin start with the zipkin profile
 // run docker-compose to start local zipkin
@@ -33,6 +37,16 @@ fun main(args: Array<String>) {
 class TestConfig {
     @Bean
     fun webClient(builder: WebClient.Builder) = builder.baseUrl("http://localhost:8080").build()
+
+    @Bean
+    @ConditionalOnMissingBean
+    fun otelHttpSpanExporter(): OtlpHttpSpanExporter {
+        return OtlpHttpSpanExporter
+            .builder()
+            .setEndpoint("https://trace.sits.no:55681/v1/traces")
+            .setTimeout(Duration.ofSeconds(5)) // .addHeader("", "")
+            .build()
+    }
 }
 
 private val logger = KotlinLogging.logger {}
@@ -42,7 +56,7 @@ class TestController(private val webClient: WebClient) {
 
     @GetMapping
     fun get(): Mono<Map<String, Any>> {
-        val korrelasjonsid = BaggageField.getByName(KORRELASJONSID_FIELD)
+        val korrelasjonsid = Baggage.current().asMap().get(KORRELASJONSID_FIELD)
         checkNotNull(korrelasjonsid)
         check(korrelasjonsid.value == MDC.get(KORRELASJONSID_FIELD))
 

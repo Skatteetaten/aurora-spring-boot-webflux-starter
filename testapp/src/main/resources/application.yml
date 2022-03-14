@@ -1,3 +1,12 @@
 aurora.webflux.header.webclient.interceptor.enabled: true
 logging.level.no.skatteetaten: DEBUG
 logging.pattern.console: "%d{\"yyyy-MM-dd'T'HH:mm:ss,SSSXXX\", UTC} [%-9.9thread] %-5level %logger{36} %X - %msg %n%rEx{full}"
+
+spring:
+    sleuth:
+        otel:
+            config:
+                trace-id-ratio-based: 1.0
+            exporter:
+                otlp:
+                    endpoint: https://trace.sits.no:55681/v1/traces
