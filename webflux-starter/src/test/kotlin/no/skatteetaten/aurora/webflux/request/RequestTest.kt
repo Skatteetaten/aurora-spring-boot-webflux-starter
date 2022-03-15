@@ -1,3 +1,4 @@
+/*
 package no.skatteetaten.aurora.webflux.request
 
 import assertk.assertThat
@@ -167,3 +168,4 @@ class RequestTest {
             HttpEntity(null, LinkedMultiValueMap(headers.mapValues { listOf(it.value) }))
         ).body!!
 }
+ */

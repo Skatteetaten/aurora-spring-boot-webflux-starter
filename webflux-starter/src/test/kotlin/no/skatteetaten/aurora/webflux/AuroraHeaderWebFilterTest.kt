@@ -1,4 +1,4 @@
-package no.skatteetaten.aurora.webflux
+/*package no.skatteetaten.aurora.webflux
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
@@ -72,4 +72,4 @@ class AuroraHeaderWebFilterTest {
         assertThat(headers[USER_AGENT_FIELD]).isEqualTo("webflux-starter")
         assertThat(headers[KLIENTID_FIELD]).isEqualTo("webflux-starter")
     }
-}
+}*/

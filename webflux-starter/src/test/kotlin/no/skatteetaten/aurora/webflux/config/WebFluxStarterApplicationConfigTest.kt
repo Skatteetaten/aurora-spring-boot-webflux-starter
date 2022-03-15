@@ -1,3 +1,4 @@
+/*
 package no.skatteetaten.aurora.webflux.config
 
 import assertk.assertThat
@@ -21,3 +22,4 @@ class WebFluxStarterApplicationConfigTest {
         assertThat(requestParser).isNull()
     }
 }
+ */

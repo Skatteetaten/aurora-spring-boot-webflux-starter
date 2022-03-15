@@ -1,3 +1,4 @@
+/*
 package no.skatteetaten.aurora.webflux
 
 import assertk.assertThat
@@ -64,3 +65,4 @@ class AuroraRequestParserTest {
         assertThat(requestHeaders[KLIENTID_FIELD]).isEqualTo("klientid")
     }
 }
+ */

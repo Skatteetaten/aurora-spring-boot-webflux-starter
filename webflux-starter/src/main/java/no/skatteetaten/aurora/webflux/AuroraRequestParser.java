@@ -4,12 +4,15 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cloud.sleuth.CurrentTraceContext;
+import org.springframework.cloud.sleuth.SpanCustomizer;
+import org.springframework.cloud.sleuth.TraceContext;
+import org.springframework.cloud.sleuth.http.HttpRequest;
+import org.springframework.cloud.sleuth.http.HttpRequestParser;
 
-import brave.SpanCustomizer;
-import brave.baggage.BaggageField;
-import brave.http.HttpRequest;
-import brave.http.HttpRequestParser;
-import brave.propagation.TraceContext;
+import io.opentelemetry.api.baggage.Baggage;
+import io.opentelemetry.api.baggage.BaggageBuilder;
+import io.opentelemetry.context.Context;
 
 public class AuroraRequestParser implements HttpRequestParser {
     private static final Logger logger = LoggerFactory.getLogger(AuroraRequestParser.class);
@@ -23,17 +26,17 @@ public class AuroraRequestParser implements HttpRequestParser {
 
     @Override
     public void parse(HttpRequest req, TraceContext context, SpanCustomizer span) {
-        HttpRequestParser.DEFAULT.parse(req, context, span);
         logger.debug("populating MDC fields");
+        BaggageBuilder baggageBuilder = Baggage.current().toBuilder();
 
         String meldingsid = req.header(MELDINGSID_FIELD);
         if (meldingsid != null) {
-            BaggageField.create(MELDINGSID_FIELD).updateValue(context, meldingsid);
+            baggageBuilder.put(MELDINGSID_FIELD, meldingsid);
         }
 
         String klientid = req.header(KLIENTID_FIELD);
         if (klientid != null) {
-            BaggageField.create(KLIENTID_FIELD).updateValue(context, klientid);
+            baggageBuilder.put(KLIENTID_FIELD, klientid);
         }
 
         String korrelasjonsid = req.header(KORRELASJONSID_FIELD);
@@ -41,7 +44,7 @@ public class AuroraRequestParser implements HttpRequestParser {
             korrelasjonsid = UUID.randomUUID().toString();
         }
 
-        BaggageField.create(KORRELASJONSID_FIELD).updateValue(context, korrelasjonsid);
+        baggageBuilder.put(KORRELASJONSID_FIELD, korrelasjonsid).build().makeCurrent();
         span.tag(TAG_KORRELASJONS_ID, korrelasjonsid);
     }
 }

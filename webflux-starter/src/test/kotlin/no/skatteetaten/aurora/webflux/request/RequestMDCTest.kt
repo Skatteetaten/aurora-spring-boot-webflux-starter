@@ -1,5 +1,6 @@
 package no.skatteetaten.aurora.webflux.request
 
+/*
 import assertk.assertThat
 import assertk.assertions.isNotNull
 import brave.baggage.BaggageField
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.getForObject
+
 
 @RestController
 class TestMdcController {
@@ -50,4 +52,4 @@ class RequestMDCTest {
         }
     }
 
-}
+}*/
