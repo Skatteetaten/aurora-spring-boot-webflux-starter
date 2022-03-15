@@ -10,3 +10,4 @@ spring:
             exporter:
                 otlp:
                     endpoint: https://trace.sits.no:55681/v1/traces
+                    timeout: 30000
