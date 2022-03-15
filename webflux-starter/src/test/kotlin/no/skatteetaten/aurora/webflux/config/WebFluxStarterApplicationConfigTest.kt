@@ -1,4 +1,3 @@
-/*
 package no.skatteetaten.aurora.webflux.config
 
 import assertk.assertThat
@@ -7,9 +6,10 @@ import no.skatteetaten.aurora.webflux.AuroraRequestParser
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.cloud.sleuth.autoconfig.otel.OtelExporterProperties
 
 @SpringBootTest(
-    classes = [WebFluxStarterApplicationConfig::class],
+    classes = [OtelExporterProperties::class, WebFluxStarterApplicationConfig::class],
     properties = ["aurora.webflux.header.filter.enabled=false"]
 )
 class WebFluxStarterApplicationConfigTest {
@@ -22,4 +22,3 @@ class WebFluxStarterApplicationConfigTest {
         assertThat(requestParser).isNull()
     }
 }
- */

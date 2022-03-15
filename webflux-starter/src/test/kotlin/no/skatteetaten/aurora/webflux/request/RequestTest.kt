@@ -1,4 +1,3 @@
-/*
 package no.skatteetaten.aurora.webflux.request
 
 import assertk.assertThat
@@ -6,7 +5,7 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isNotEmpty
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
-import brave.baggage.BaggageField
+import io.opentelemetry.api.baggage.Baggage
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGSID_FIELD
@@ -38,7 +37,7 @@ open class RequestTestController {
         "mdc_Korrelasjonsid" to MDC.get(KORRELASJONSID_FIELD),
         "mdc_Klientid" to MDC.get(KLIENTID_FIELD),
         "mdc_Meldingsid" to MDC.get(MELDINGSID_FIELD),
-        "span" to BaggageField.getByName(KORRELASJONSID_FIELD).value
+        "span" to Baggage.current().getEntryValue(KORRELASJONSID_FIELD)
     ).also {
         LoggerFactory.getLogger(RequestTestController::class.java).info("Clearing MDC, content: $it")
         MDC.clear()
@@ -168,4 +167,3 @@ class RequestTest {
             HttpEntity(null, LinkedMultiValueMap(headers.mapValues { listOf(it.value) }))
         ).body!!
 }
- */

@@ -6,6 +6,7 @@ import assertk.assertThat
 import assertk.assertions.support.expected
 import brave.sampler.Sampler
 import com.fasterxml.jackson.databind.JsonNode
+import io.opentelemetry.sdk.trace.samplers.Sampler
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.TAG_KORRELASJONS_ID
 import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig
 import org.awaitility.Awaitility.await
@@ -41,11 +42,6 @@ open class TestMain
 @TestConfiguration
 open class TestConfig {
     @Bean
-    open fun defaultSampler(): Sampler {
-        return Sampler.ALWAYS_SAMPLE
-    }
-
-    @Bean
     @Primary
     open fun webClient(builder: WebClient.Builder) = builder.build()
 }
@@ -68,7 +64,7 @@ class ZipkinIntegrationTest {
     companion object {
         @Container
         val zipkin: KGenericContainer = KGenericContainer(
-            "openzipkin/zipkin-slim:2"
+            "otel/opentelemetry-collector"
         )
             .withExposedPorts(9411)
             .waitingFor(Wait.forHttp("/zipkin"))
@@ -107,4 +103,4 @@ class ZipkinIntegrationTest {
         expected("response to contain tag $TAG_KORRELASJONS_ID")
     }
 }
- */
+*/

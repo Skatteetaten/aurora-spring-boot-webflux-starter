@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cloud.sleuth.CurrentTraceContext;
 import org.springframework.cloud.sleuth.SpanCustomizer;
 import org.springframework.cloud.sleuth.TraceContext;
 import org.springframework.cloud.sleuth.http.HttpRequest;
@@ -12,7 +11,6 @@ import org.springframework.cloud.sleuth.http.HttpRequestParser;
 
 import io.opentelemetry.api.baggage.Baggage;
 import io.opentelemetry.api.baggage.BaggageBuilder;
-import io.opentelemetry.context.Context;
 
 public class AuroraRequestParser implements HttpRequestParser {
     private static final Logger logger = LoggerFactory.getLogger(AuroraRequestParser.class);

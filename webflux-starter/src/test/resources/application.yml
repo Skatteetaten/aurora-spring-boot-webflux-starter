@@ -1,6 +1,12 @@
 spring:
     application:
         name: webflux-starter
+    sleuth:
+        otel:
+            exporter:
+                otlp:
+                    endpoint: http://localhost
+                    timeout: 30000
 
 aurora:
     webflux:

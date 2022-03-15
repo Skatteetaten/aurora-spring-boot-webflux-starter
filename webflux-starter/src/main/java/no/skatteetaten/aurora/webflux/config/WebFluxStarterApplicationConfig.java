@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer;
+import org.springframework.cloud.sleuth.autoconfig.otel.OtelExporterProperties;
 import org.springframework.cloud.sleuth.http.HttpRequestParser;
 import org.springframework.cloud.sleuth.instrument.web.HttpServerRequestParser;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +15,6 @@ import org.springframework.context.annotation.Configuration;
 
 import io.opentelemetry.exporter.otlp.http.trace.OtlpHttpSpanExporter;
 import no.skatteetaten.aurora.webflux.AuroraRequestParser;
-import no.skatteetaten.aurora.webflux.AuroraSpanHandler;
 import no.skatteetaten.aurora.webflux.AuroraWebClientCustomizer;
 
 @EnableConfigurationProperties(WebFluxStarterProperties.class)
@@ -33,18 +33,13 @@ public class WebFluxStarterApplicationConfig {
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "spring.zipkin", name = "enabled", havingValue = "false", matchIfMissing = true)
-    public AuroraSpanHandler auroraSpanHandler() {
-        return new AuroraSpanHandler();
-    }
-
-    @Bean
+    @ConditionalOnProperty(prefix = "aurora.webflux.otel", name = "enabled", matchIfMissing = true)
     @ConditionalOnMissingBean
-    public OtlpHttpSpanExporter otlpHttpSpanExporter() {
+    public OtlpHttpSpanExporter otlpHttpSpanExporter(OtelExporterProperties props) {
         return OtlpHttpSpanExporter
             .builder()
-            .setEndpoint("https://trace.sits.no:55681/v1/traces")
-            .setTimeout(Duration.ofSeconds(5)) // .addHeader("", "")
+            .setEndpoint(props.getOtlp().getEndpoint())
+            .setTimeout(Duration.ofMillis(props.getOtlp().getTimeout()))
             .build();
     }
 }
