@@ -20,7 +20,7 @@ public class WebFluxStarterApplicationConfig {
     @ConditionalOnProperty(prefix = "aurora.webflux.header.webclient.interceptor", name = "enabled")
     public WebClientCustomizer webClientCustomizer(
         @Value("${spring.application.name}") String name,
-        @Value("${AURORA_KLIENTID:}") String klientIdEnv
+        @Value("${aurora.klientid:}") String klientIdEnv
     ) {
         String klientId = !klientIdEnv.isBlank() ? klientIdEnv : name;
         return new AuroraWebClientCustomizer(klientId);

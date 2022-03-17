@@ -77,7 +77,7 @@ class AuroraHeaderWebFilterDefaultTest : AbstractAuroraHeaderWebFilterTest() {
     }
 }
 
-@TestPropertySource(properties = ["AURORA_KLIENTID=segment/webflux-starter/1.0.0"])
+@TestPropertySource(properties = ["aurora.klientid=segment/webflux-starter/1.0.0"])
 class AuroraHeaderWebFilterEnvTest : AbstractAuroraHeaderWebFilterTest() {
 
     @Test
