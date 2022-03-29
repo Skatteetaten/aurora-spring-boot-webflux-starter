@@ -56,5 +56,4 @@ dependencies {
     testImplementation("org.awaitility:awaitility-kotlin:4.1.1")
 }
 
-group = "no.skatteetaten.aurora.springboot"
 version = "1.0-SNAPSHOT"
