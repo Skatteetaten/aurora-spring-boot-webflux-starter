@@ -4,9 +4,7 @@ plugins {
 }
 
 aurora {
-    useLibDefaults
     useKotlinDefaults
-
     features {
         auroraStarters = false
     }
