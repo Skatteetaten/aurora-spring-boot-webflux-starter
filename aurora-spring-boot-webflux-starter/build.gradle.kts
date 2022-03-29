@@ -56,4 +56,3 @@ dependencies {
     testImplementation("org.awaitility:awaitility-kotlin:4.1.1")
 }
 
-version = "1.0-SNAPSHOT"
