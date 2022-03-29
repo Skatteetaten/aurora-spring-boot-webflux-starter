@@ -4,6 +4,7 @@ def config = [
     pipelineScript: 'https://git.aurora.skead.no/scm/ao/aurora-pipeline-scripts.git',
     credentialsId: 'github',
     groupId: 'no.skatteetaten.aurora.springboot',
+    artifactId: 'aurora-spring-boot-webflux-starter',
     javaVersion: "11",
     jacoco: false,
     docs: false,
