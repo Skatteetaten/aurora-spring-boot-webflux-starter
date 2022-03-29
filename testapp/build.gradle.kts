@@ -22,7 +22,7 @@ val implementation by configurations
 dependencies {
     implementation(project(":aurora-spring-boot-webflux-starter"))
 
-    implementation("org.springframework.boot:spring-boot-starter:2.6.2")
+    implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.6.10")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.5.2")

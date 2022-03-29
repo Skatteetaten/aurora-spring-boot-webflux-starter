@@ -37,11 +37,11 @@ dependencies {
     api("no.skatteetaten.aurora.springboot:aurora-spring-boot-base-starter:1.3.5") {
         exclude("org.springframework.cloud", "spring-cloud-sleuth-brave")
     }
-    api("org.springframework.boot:spring-boot-configuration-processor:2.6.2")
+    api("org.springframework.boot:spring-boot-configuration-processor")
 
     testImplementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
-    testImplementation("org.springframework.boot:spring-boot-starter-test:2.6.2")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
     testImplementation("com.squareup.okhttp3:mockwebserver:3.14.9")
     testImplementation("org.testcontainers:testcontainers:1.16.2")
