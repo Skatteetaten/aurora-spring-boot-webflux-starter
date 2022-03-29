@@ -17,10 +17,6 @@ aurora {
 repositories {
     mavenLocal()
     maven {
-        url = uri("https://repo.maven.apache.org/maven2/")
-    }
-
-    maven {
         url = uri("https://repo.spring.io/milestone")
     }
 }
@@ -55,6 +51,3 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:1.16.2")
     testImplementation("org.awaitility:awaitility-kotlin:4.1.1")
 }
-
-group = "no.skatteetaten.aurora.springboot"
-version = "1.0-SNAPSHOT"
