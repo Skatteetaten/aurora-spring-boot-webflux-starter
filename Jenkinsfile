@@ -19,9 +19,8 @@ def overrides = [
     iqOrganizationName: "Team AOS",
     compilePropertiesIq: "-x test",
     chatRoom: "#aos-notifications",
-    pomPath: 'webflux-starter/pom.xml',
-    compileProperties: '-pl webflux-starter',
-    deployProperties: '-pl webflux-starter ',
+    compileGoal: ':aurora-spring-boot-webflux-starter:build',
+    deployGoal: ':aurora-spring-boot-webflux-starter:upload -x test',
 ]
 
-jenkinsfile.run(version, overrides)
+jenkinsfile.gradle(config.scriptVersion, config)
