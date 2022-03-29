@@ -23,4 +23,7 @@ def overrides = [
     deployGoal: ':aurora-spring-boot-webflux-starter:upload -x test',
 ]
 
+fileLoader.withGit(config.pipelineScript, config.scriptVersion) {
+  jenkinsfile = fileLoader.load('templates/leveransepakke')
+}
 jenkinsfile.gradle(config.scriptVersion, config)
