@@ -12,6 +12,13 @@ aurora {
     }
 }
 
+repositories {
+    mavenLocal()
+    maven {
+        url = uri("https://repo.spring.io/milestone")
+    }
+}
+
 val implementation by configurations
 
 dependencies {
