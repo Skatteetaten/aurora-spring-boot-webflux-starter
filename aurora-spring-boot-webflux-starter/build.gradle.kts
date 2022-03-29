@@ -1,10 +1,11 @@
 plugins {
+    `java-library`
     id("no.skatteetaten.gradle.aurora") version "4.4.12"
 }
 
 aurora {
     useLibDefaults
-    useKotlinDefaults
+    useJavaDefaults
     useSpringBoot {
         useWebFlux
     }
@@ -20,10 +21,6 @@ repositories {
         url = uri("https://repo.spring.io/milestone")
     }
 }
-
-val implementation by configurations
-val api by configurations
-val testImplementation by configurations
 
 dependencies {
     api(platform("org.springframework.cloud:spring-cloud-dependencies:2021.0.1"))
