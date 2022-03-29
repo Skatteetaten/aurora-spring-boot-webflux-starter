@@ -3,8 +3,6 @@ def config = [
     scriptVersion  : 'v7',
     pipelineScript: 'https://git.aurora.skead.no/scm/ao/aurora-pipeline-scripts.git',
     credentialsId: 'github',
-    groupId: 'no.skatteetaten.aurora.springboot',
-    artifactId: 'aurora-spring-boot-webflux-starter',
     javaVersion: "11",
     jacoco: false,
     docs: false,
@@ -16,7 +14,6 @@ def config = [
     iqOrganizationName: "Team AOS",
     compilePropertiesIq: "-x test",
     chatRoom: "#aos-notifications",
-    compileGoal: ':aurora-spring-boot-webflux-starter:build',
     deployGoal: ':aurora-spring-boot-webflux-starter:upload -x test',
 ]
 
