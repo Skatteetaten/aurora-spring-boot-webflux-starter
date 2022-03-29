@@ -34,17 +34,17 @@ dependencies {
     api("io.opentelemetry:opentelemetry-exporter-otlp-http-trace")
 
     api("org.springframework.boot:spring-boot-starter-webflux")
-    api("no.skatteetaten.aurora.springboot:aurora-spring-boot-base-starter:1.3.5") {
+    api("no.skatteetaten.aurora.springboot:aurora-spring-boot-base-starter:1.3.7") {
         exclude("org.springframework.cloud", "spring-cloud-sleuth-brave")
     }
     api("org.springframework.boot:spring-boot-configuration-processor")
 
     testImplementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
+    testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
-    testImplementation("com.squareup.okhttp3:mockwebserver:3.14.9")
-    testImplementation("org.testcontainers:testcontainers:1.16.2")
-    testImplementation("org.testcontainers:junit-jupiter:1.16.2")
-    testImplementation("org.awaitility:awaitility-kotlin:4.1.1")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.9.3")
+    testImplementation("org.testcontainers:testcontainers:1.16.3")
+    testImplementation("org.testcontainers:junit-jupiter:1.16.3")
+    testImplementation("org.awaitility:awaitility-kotlin:4.2.0")
 }
