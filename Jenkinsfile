@@ -1,12 +1,6 @@
 #!/usr/bin/env groovy
-env.CI = true
-
-def version = 'v7'
-fileLoader.withGit('https://git.aurora.skead.no/scm/ao/aurora-pipeline-scripts.git', version) {
-    jenkinsfile = fileLoader.load('templates/leveransepakke')
-}
-
-def overrides = [
+def config = [
+    scriptVersion  : 'v7',
     credentialsId: 'github',
     javaVersion: "11",
     jacoco: false,
