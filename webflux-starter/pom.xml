@@ -233,6 +233,9 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>3.3.2</version>
+        <configuration>
+          <additionalJOption>-Xdoclint:none</additionalJOption>
+        </configuration>
         <executions>
           <execution>
             <id>attach-javadocs</id>
@@ -262,6 +265,7 @@
       <plugin>
         <!-- In order for Nexus Jenkins plugin to analyze dependencies, they must be present in the workspace. -->
         <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.2.0</version>
         <executions>
           <execution>
             <id>copy</id>
