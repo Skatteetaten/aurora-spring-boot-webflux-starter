@@ -78,7 +78,7 @@ class AuroraHeaderWebFilterDefaultTest : AbstractAuroraHeaderWebFilterTest() {
 }
 
 @TestPropertySource(properties = ["aurora.klientid=segment/webflux-starter/1.0.0"])
-class AuroraHeaderWebFilterEnvTest : AbstractAuroraHeaderWebFilterTest() {
+class AuroraHeaderWebFilterKlientIdEnvTest : AbstractAuroraHeaderWebFilterTest() {
 
     @Test
     fun `Set KlientID from env`() {
@@ -91,5 +91,21 @@ class AuroraHeaderWebFilterEnvTest : AbstractAuroraHeaderWebFilterTest() {
         val headers = request.headers
         assertThat(headers[KLIENTID_FIELD]).isNotNull().isEqualTo("segment/webflux-starter/1.0.0")
         assertThat(headers[USER_AGENT_FIELD]).isNotNull().isEqualTo("segment/webflux-starter/1.0.0")
+    }
+}
+@TestPropertySource(properties = ["app.version=1.0.0"])
+class AuroraHeaderWebFilterVersionEnvTest : AbstractAuroraHeaderWebFilterTest() {
+
+    @Test
+    fun `Set fallback klientID`() {
+        server.enqueue(MockResponse().setBody("test"))
+
+        webClient.get().uri(server.url("/").toString()).retrieve().bodyToMono<String>().block()
+
+        val request = server.takeRequest()
+
+        val headers = request.headers
+        assertThat(headers[KLIENTID_FIELD]).isNotNull().isEqualTo("webflux-starter/1.0.0")
+        assertThat(headers[USER_AGENT_FIELD]).isNotNull().isEqualTo("webflux-starter/1.0.0")
     }
 }
