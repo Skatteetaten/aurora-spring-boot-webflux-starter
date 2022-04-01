@@ -51,4 +51,4 @@ aurora.webflux.header.webclient.interceptor.enabled = true
 The headers set are based on these values:
 - `Korrelasjonsid` taken from the incoming Request header. If not found, it will generate a new ID.
 - `Meldingsid` will always generate a new ID.
-- `Klientid` set from the environment variable AURORA_KLIENTID or uses application name as fallback (using the `spring.application.name` property). The `User-Agent` header will also be set to the same value.
+- `Klientid` set from the environment variable AURORA_KLIENTID or uses application name with version as fallback (using the `spring.application.name` property and `APP_VERSION` env). The `User-Agent` header will also be set to the same value.
