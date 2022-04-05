@@ -18,8 +18,14 @@ import no.skatteetaten.aurora.webflux.AuroraWebClientCustomizer;
 public class WebFluxStarterApplicationConfig {
     @Bean
     @ConditionalOnProperty(prefix = "aurora.webflux.header.webclient.interceptor", name = "enabled")
-    public WebClientCustomizer webClientCustomizer(@Value("${spring.application.name}") String name) {
-        return new AuroraWebClientCustomizer(name);
+    public WebClientCustomizer webClientCustomizer(
+        @Value("${spring.application.name:}") String appName,
+        @Value("${app.version:}") String appVersion,
+        @Value("${aurora.klientid:}") String klientIdEnv
+    ) {
+        String fallbackKlientId = !appVersion.isBlank() ? String.format("%s/%s", appName, appVersion) : appName;
+        String klientId = !klientIdEnv.isBlank() ? klientIdEnv : fallbackKlientId;
+        return new AuroraWebClientCustomizer(klientId);
     }
 
     @Bean(HttpServerRequestParser.NAME)

@@ -1,6 +1,6 @@
 # Aurora Spring Boot WebFlux Starter
 
-A Spring Boot (2.6.5) starter for WebFlux related functionality.
+A Spring Boot starter for WebFlux related functionality.
 This starter is has a dependency on the [base-starter](https://github.com/Skatteetaten/aurora-spring-boot-base-starter).
 
 ## How to use
@@ -51,4 +51,4 @@ aurora.webflux.header.webclient.interceptor.enabled = true
 The headers set are based on these values:
 - `Korrelasjonsid` taken from the incoming Request header. If not found, it will generate a new ID.
 - `Meldingsid` will always generate a new ID.
-- `Klientid` set from the application name (using the `spring.application.name` property). The `User-Agent` header will also be set to the same value.
+- `Klientid` set from the environment variable AURORA_KLIENTID or uses application name with version as fallback (using the `spring.application.name` property and `APP_VERSION` env). The `User-Agent` header will also be set to the same value.
