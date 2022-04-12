@@ -1,6 +1,6 @@
 plugins {
     `java-library`
-    id("no.skatteetaten.gradle.aurora") version "4.4.12"
+    id("no.skatteetaten.gradle.aurora") version "4.4.15"
 }
 
 aurora {
@@ -39,7 +39,7 @@ dependencies {
     }
     api("org.springframework.boot:spring-boot-configuration-processor")
 
-    testImplementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10")
+    testImplementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.20")
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
