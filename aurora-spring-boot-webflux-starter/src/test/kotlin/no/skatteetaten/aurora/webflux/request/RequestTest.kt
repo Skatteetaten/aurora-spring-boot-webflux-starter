@@ -49,10 +49,7 @@ class RequestTest {
     @Nested
     @SpringBootTest(
         classes = [RequestTestMain::class, WebFluxStarterApplicationConfig::class],
-        properties = [
-            "spring.zipkin.enabled=true",
-            "aurora.webflux.header.filter.enabled=true"
-        ],
+        properties = [ "aurora.webflux.header.filter.enabled=true" ],
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
     )
     inner class FilterEnabled {
@@ -97,10 +94,7 @@ class RequestTest {
     @Nested
     @SpringBootTest(
         classes = [RequestTestMain::class, WebFluxStarterApplicationConfig::class],
-        properties = [
-            "spring.zipkin.enabled=true",
-            "aurora.webflux.header.filter.enabled=false"
-        ],
+        properties = [ "aurora.webflux.header.filter.enabled=false" ],
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
     )
     inner class FilterDisabled {
@@ -119,10 +113,7 @@ class RequestTest {
     @Nested
     @SpringBootTest(
         classes = [RequestTestMain::class, WebFluxStarterApplicationConfig::class],
-        properties = [
-            "spring.zipkin.enabled=false",
-            "aurora.webflux.header.filter.enabled=true"
-        ],
+        properties = [ "aurora.webflux.header.filter.enabled=true" ],
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
     )
     inner class ZipkinDisabled {
@@ -141,10 +132,7 @@ class RequestTest {
     @Nested
     @SpringBootTest(
         classes = [RequestTestMain::class, WebFluxStarterApplicationConfig::class],
-        properties = [
-            "spring.zipkin.enabled=false",
-            "aurora.webflux.header.filter.enabled=false"
-        ],
+        properties = [ "aurora.webflux.header.filter.enabled=false" ],
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
     )
     inner class ZipkinAndFilterDisabled {
