@@ -35,7 +35,7 @@ Spring Sleuth is by default disabled for local development and enabled in OpenSh
 You can override this by setting the following property:
 
 ```properties
-spring.zipkin.enabled = false
+spring.zipkin.enabled = true
 ```
 
 ### WebClient interceptor
