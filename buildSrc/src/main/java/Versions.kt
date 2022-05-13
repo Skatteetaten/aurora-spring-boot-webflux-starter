@@ -8,7 +8,6 @@ object Versions {
 
     const val assertk = "0.25"
     const val mockwebserver = "3.14.9"
-    const val testcontainers = "1.16.3"
     const val awaitility = "4.2.0"
 }
 

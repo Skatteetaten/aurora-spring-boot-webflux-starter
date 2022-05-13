@@ -29,7 +29,5 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:${Versions.assertk}")
     testImplementation("com.squareup.okhttp3:mockwebserver:${Versions.mockwebserver}")
-    testImplementation("org.testcontainers:testcontainers:${Versions.testcontainers}")
-    testImplementation("org.testcontainers:junit-jupiter:${Versions.testcontainers}")
     testImplementation("org.awaitility:awaitility-kotlin:${Versions.awaitility}")
 }
