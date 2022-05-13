@@ -110,44 +110,6 @@ class RequestTest {
         }
     }
 
-    @Nested
-    @SpringBootTest(
-        classes = [RequestTestMain::class, WebFluxStarterApplicationConfig::class],
-        properties = [ "aurora.webflux.header.filter.enabled=true" ],
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-    )
-    inner class ZipkinDisabled {
-        @LocalServerPort
-        private var port: Int = 0
-
-        @Test
-        fun `Korrelasjonsid is set`() {
-            val response = sendRequest(port)
-
-            assertThat(response["mdc_Korrelasjonsid"]).isNotNull().isNotEmpty()
-            assertThat(response["span"]).isNotNull().isNotEmpty()
-        }
-    }
-
-    @Nested
-    @SpringBootTest(
-        classes = [RequestTestMain::class, WebFluxStarterApplicationConfig::class],
-        properties = [ "aurora.webflux.header.filter.enabled=false" ],
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-    )
-    inner class ZipkinAndFilterDisabled {
-        @LocalServerPort
-        private var port: Int = 0
-
-        @Test
-        fun `Korrelasjonsid is null`() {
-            val response = sendRequest(port)
-
-            assertThat(response["mdc_Korrelasjonsid"]).isNull()
-            assertThat(response["span"]).isNull()
-        }
-    }
-
     fun sendRequest(port: Int, headers: Map<String, String> = emptyMap()) =
         RestTemplate().exchange<Map<String, String>>(
             "http://localhost:$port/test",
