@@ -2,12 +2,12 @@ package no.skatteetaten.aurora.webflux;
 
 import static java.util.UUID.randomUUID;
 import static org.springframework.web.reactive.function.client.ClientRequest.from;
-
 import static no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD;
 import static no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD;
 import static no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGSID_FIELD;
 import static no.skatteetaten.aurora.webflux.AuroraRequestParser.USER_AGENT_FIELD;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer;
@@ -36,10 +36,12 @@ public class AuroraWebClientCustomizer implements WebClientCustomizer {
     }
 
     protected String addCorrelationId() {
-        BaggageField field = BaggageField.getByName(KORRELASJONSID_FIELD);
-        if (field == null) {
-            return UUID.randomUUID().toString();
-        }
-        return field.getValue();
+        return Optional.ofNullable(getBaggageField())
+            .map(BaggageField::getValue)
+            .orElseGet(() -> UUID.randomUUID().toString());
+    }
+
+    BaggageField getBaggageField() {
+        return BaggageField.getByName(KORRELASJONSID_FIELD);
     }
 }

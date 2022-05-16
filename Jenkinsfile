@@ -1,12 +1,7 @@
 #!/usr/bin/env groovy
-env.CI = true
-
-def version = 'v7'
-fileLoader.withGit('https://git.aurora.skead.no/scm/ao/aurora-pipeline-scripts.git', version) {
-    jenkinsfile = fileLoader.load('templates/leveransepakke')
-}
-
-def overrides = [
+def config = [
+    scriptVersion  : 'v7',
+    pipelineScript: 'https://git.aurora.skead.no/scm/ao/aurora-pipeline-scripts.git',
     credentialsId: 'github',
     javaVersion: "11",
     jacoco: false,
@@ -19,9 +14,10 @@ def overrides = [
     iqOrganizationName: "Team AOS",
     compilePropertiesIq: "-x test",
     chatRoom: "#aos-notifications",
-    pomPath: 'webflux-starter/pom.xml',
-    compileProperties: '-pl webflux-starter',
-    deployProperties: '-pl webflux-starter ',
+    deployGoal: ':aurora-spring-boot-webflux-starter:upload -x test',
 ]
 
-jenkinsfile.run(version, overrides)
+fileLoader.withGit(config.pipelineScript, config.scriptVersion) {
+  jenkinsfile = fileLoader.load('templates/leveransepakke')
+}
+jenkinsfile.gradle(config.scriptVersion, config)

@@ -49,7 +49,7 @@ class TestController(private val webClient: WebClient) {
         logger.info("Get request")
         return webClient.get().uri("/headers").retrieve().bodyToMono<Map<String, String>>().map {
             mapOf(
-                "Korrelasjonsid fra WebFilter" to korrelasjonsid,
+                "Korrelasjonsid fra innkommende request" to korrelasjonsid,
                 "Request headers fra WebClient" to it
             )
         }

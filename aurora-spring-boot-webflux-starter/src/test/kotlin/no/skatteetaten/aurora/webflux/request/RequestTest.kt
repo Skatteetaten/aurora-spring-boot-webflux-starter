@@ -49,10 +49,7 @@ class RequestTest {
     @Nested
     @SpringBootTest(
         classes = [RequestTestMain::class, WebFluxStarterApplicationConfig::class],
-        properties = [
-            "spring.zipkin.enabled=true",
-            "aurora.webflux.header.filter.enabled=true"
-        ],
+        properties = [ "aurora.webflux.header.filter.enabled=true" ],
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
     )
     inner class FilterEnabled {
@@ -97,10 +94,7 @@ class RequestTest {
     @Nested
     @SpringBootTest(
         classes = [RequestTestMain::class, WebFluxStarterApplicationConfig::class],
-        properties = [
-            "spring.zipkin.enabled=true",
-            "aurora.webflux.header.filter.enabled=false"
-        ],
+        properties = [ "aurora.webflux.header.filter.enabled=false" ],
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
     )
     inner class FilterDisabled {
@@ -109,50 +103,6 @@ class RequestTest {
 
         @Test
         fun `MDC and Korrelasjonsid is null`() {
-            val response = sendRequest(port)
-
-            assertThat(response["mdc_Korrelasjonsid"]).isNull()
-            assertThat(response["span"]).isNull()
-        }
-    }
-
-    @Nested
-    @SpringBootTest(
-        classes = [RequestTestMain::class, WebFluxStarterApplicationConfig::class],
-        properties = [
-            "spring.zipkin.enabled=false",
-            "aurora.webflux.header.filter.enabled=true"
-        ],
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-    )
-    inner class ZipkinDisabled {
-        @LocalServerPort
-        private var port: Int = 0
-
-        @Test
-        fun `Korrelasjonsid is set`() {
-            val response = sendRequest(port)
-
-            assertThat(response["mdc_Korrelasjonsid"]).isNotNull().isNotEmpty()
-            assertThat(response["span"]).isNotNull().isNotEmpty()
-        }
-    }
-
-    @Nested
-    @SpringBootTest(
-        classes = [RequestTestMain::class, WebFluxStarterApplicationConfig::class],
-        properties = [
-            "spring.zipkin.enabled=false",
-            "aurora.webflux.header.filter.enabled=false"
-        ],
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-    )
-    inner class ZipkinAndFilterDisabled {
-        @LocalServerPort
-        private var port: Int = 0
-
-        @Test
-        fun `Korrelasjonsid is null`() {
             val response = sendRequest(port)
 
             assertThat(response["mdc_Korrelasjonsid"]).isNull()
