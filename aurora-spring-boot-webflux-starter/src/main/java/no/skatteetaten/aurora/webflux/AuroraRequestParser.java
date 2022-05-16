@@ -23,7 +23,7 @@ public class AuroraRequestParser implements HttpRequestParser {
     private static final String TRACE_TAG_PREFIX = "aurora.";
     private static final String TRACE_TAG_KORRELASJONS_ID = TRACE_TAG_PREFIX + KORRELASJONSID_FIELD.toLowerCase();
     private static final String TRACE_TAG_KLIENT_ID = TRACE_TAG_PREFIX + KLIENTID_FIELD.toLowerCase();
-    private static final String TRACE_TAG_CLUSTER = TRACE_TAG_PREFIX + "CLUSTER";
+    private static final String TRACE_TAG_CLUSTER = TRACE_TAG_PREFIX + "cluster";
 
     @Override
     public void parse(HttpRequest req, TraceContext context, SpanCustomizer span) {
