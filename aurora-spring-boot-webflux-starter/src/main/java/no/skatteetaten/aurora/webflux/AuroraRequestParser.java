@@ -41,7 +41,8 @@ public class AuroraRequestParser implements HttpRequestParser {
             span.tag(TRACE_TAG_KLIENT_ID, klientid);
         }
 
-        String korrelasjonsid = Optional.ofNullable(req.header(KORRELASJONSID_FIELD)).orElse(UUID.randomUUID().toString());
+        String korrelasjonsid = Optional.ofNullable(req.header(KORRELASJONSID_FIELD))
+            .orElse(UUID.randomUUID().toString());
         BaggageField.create(KORRELASJONSID_FIELD).updateValue(context, korrelasjonsid);
         span.tag(TRACE_TAG_KORRELASJONS_ID, korrelasjonsid);
 
