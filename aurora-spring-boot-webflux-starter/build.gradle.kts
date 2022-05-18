@@ -26,6 +26,7 @@ dependencies {
 
     testImplementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin}")
     testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.junit-pioneer:junit-pioneer:${Versions.junitPioneer}")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:${Versions.assertk}")
     testImplementation("com.squareup.okhttp3:mockwebserver:${Versions.mockwebserver}")

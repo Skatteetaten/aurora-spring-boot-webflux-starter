@@ -20,10 +20,12 @@ public class AuroraRequestParser implements HttpRequestParser {
     public static final String MELDINGSID_FIELD = "Meldingsid";
     public static final String KLIENTID_FIELD = "Klientid";
 
+    public static final String ENV_VARIABEL_CLUSTER = "OPENSHIFT_CLUSTER";
+
     private static final String TRACE_TAG_PREFIX = "aurora.";
-    private static final String TRACE_TAG_KORRELASJONS_ID = TRACE_TAG_PREFIX + KORRELASJONSID_FIELD.toLowerCase();
-    private static final String TRACE_TAG_KLIENT_ID = TRACE_TAG_PREFIX + KLIENTID_FIELD.toLowerCase();
-    private static final String TRACE_TAG_CLUSTER = TRACE_TAG_PREFIX + "cluster";
+    static final String TRACE_TAG_KORRELASJONS_ID = TRACE_TAG_PREFIX + KORRELASJONSID_FIELD.toLowerCase();
+    static final String TRACE_TAG_KLIENT_ID = TRACE_TAG_PREFIX + KLIENTID_FIELD.toLowerCase();
+    static final String TRACE_TAG_CLUSTER = TRACE_TAG_PREFIX + "cluster";
 
     @Override
     public void parse(HttpRequest req, TraceContext context, SpanCustomizer span) {
@@ -41,12 +43,14 @@ public class AuroraRequestParser implements HttpRequestParser {
             span.tag(TRACE_TAG_KLIENT_ID, klientid);
         }
 
+        String cluster = System.getenv(ENV_VARIABEL_CLUSTER);
+        if (cluster != null) {
+            span.tag(TRACE_TAG_CLUSTER, cluster);
+        }
+
         String korrelasjonsid = Optional.ofNullable(req.header(KORRELASJONSID_FIELD))
             .orElse(UUID.randomUUID().toString());
         BaggageField.create(KORRELASJONSID_FIELD).updateValue(context, korrelasjonsid);
         span.tag(TRACE_TAG_KORRELASJONS_ID, korrelasjonsid);
-
-        String cluster = Optional.ofNullable(System.getenv("OPENSHIFT_CLUSTER")).orElse("");
-        span.tag(TRACE_TAG_CLUSTER, cluster);
     }
 }
