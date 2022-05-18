@@ -1,5 +1,6 @@
 package no.skatteetaten.aurora.webflux;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -19,7 +20,12 @@ public class AuroraRequestParser implements HttpRequestParser {
     public static final String MELDINGSID_FIELD = "Meldingsid";
     public static final String KLIENTID_FIELD = "Klientid";
 
-    public static final String TAG_KORRELASJONS_ID = "aurora." + KORRELASJONSID_FIELD.toLowerCase();
+    public static final String ENV_VARIABEL_CLUSTER = "OPENSHIFT_CLUSTER";
+
+    private static final String TRACE_TAG_PREFIX = "aurora.";
+    static final String TRACE_TAG_KORRELASJONS_ID = TRACE_TAG_PREFIX + KORRELASJONSID_FIELD.toLowerCase();
+    static final String TRACE_TAG_KLIENT_ID = TRACE_TAG_PREFIX + KLIENTID_FIELD.toLowerCase();
+    static final String TRACE_TAG_CLUSTER = TRACE_TAG_PREFIX + "cluster";
 
     @Override
     public void parse(HttpRequest req, TraceContext context, SpanCustomizer span) {
@@ -34,14 +40,17 @@ public class AuroraRequestParser implements HttpRequestParser {
         String klientid = req.header(KLIENTID_FIELD);
         if (klientid != null) {
             BaggageField.create(KLIENTID_FIELD).updateValue(context, klientid);
+            span.tag(TRACE_TAG_KLIENT_ID, klientid);
         }
 
-        String korrelasjonsid = req.header(KORRELASJONSID_FIELD);
-        if (korrelasjonsid == null) {
-            korrelasjonsid = UUID.randomUUID().toString();
+        String cluster = System.getenv(ENV_VARIABEL_CLUSTER);
+        if (cluster != null) {
+            span.tag(TRACE_TAG_CLUSTER, cluster);
         }
 
+        String korrelasjonsid = Optional.ofNullable(req.header(KORRELASJONSID_FIELD))
+            .orElse(UUID.randomUUID().toString());
         BaggageField.create(KORRELASJONSID_FIELD).updateValue(context, korrelasjonsid);
-        span.tag(TAG_KORRELASJONS_ID, korrelasjonsid);
+        span.tag(TRACE_TAG_KORRELASJONS_ID, korrelasjonsid);
     }
 }
