@@ -5,6 +5,15 @@ Alle viktige endringer i dette prosjektet vil bli dokumentert i denne filen.
 Formatet i denne filen er basert på [Keep a Changelog](http://keepachangelog.com/)
 og prosjektet følger [Semantic Versioning](http://semver.org/).
 
+## [1.4.3] - 2022-05-20
+
+### Changed
+
+- Oppgraderte til SpringBoot til versjon 2.6.7.
+- Oppgraderte versjon av aurora-spring-boot-base-starter til versjon 1.3.10.
+- Oppgraderte versjon av spring-cloud-dependencies tilm versjon 2021.0.2
+
+
 ## [1.4.1] - 2022-05-04
 
 ### Changed
