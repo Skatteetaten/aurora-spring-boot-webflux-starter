@@ -9,10 +9,8 @@ og prosjektet følger [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-- Oppgraderte til SpringBoot til versjon 2.6.7.
-- Oppgraderte versjon av aurora-spring-boot-base-starter til versjon 1.3.10.
-- Oppgraderte versjon av spring-cloud-dependencies tilm versjon 2021.0.2
-
+- Oppgraderte versjon av aurora-spring-boot-base-starter til versjon 1.3.12.
+- Oppgraderte versjon av aurora-gradle-plugin til versjon 4.4.22 (som innebærer SpringBoot til versjon 2.6.8.)
 
 ## [1.4.1] - 2022-05-04
 
