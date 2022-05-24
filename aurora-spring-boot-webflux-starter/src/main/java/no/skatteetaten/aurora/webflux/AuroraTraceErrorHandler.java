@@ -15,7 +15,7 @@ public class AuroraTraceErrorHandler {
         Hooks.onErrorDropped(error -> {
             Throwable cause = error.getCause();
             if (isTraceError(cause)) {
-                logger.error(error.getMessage());
+                logger.warn(error.getMessage());
             } else {
                 logger.error(error.getMessage(), error);
             }
