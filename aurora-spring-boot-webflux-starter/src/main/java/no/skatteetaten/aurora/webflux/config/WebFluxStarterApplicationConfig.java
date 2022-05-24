@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import brave.http.HttpRequestParser;
+import no.skatteetaten.aurora.webflux.AuroraTraceErrorHandler;
 import no.skatteetaten.aurora.webflux.AuroraRequestParser;
 import no.skatteetaten.aurora.webflux.AuroraSpanHandler;
 import no.skatteetaten.aurora.webflux.AuroraWebClientCustomizer;
@@ -16,6 +17,15 @@ import no.skatteetaten.aurora.webflux.AuroraWebClientCustomizer;
 @EnableConfigurationProperties(WebFluxStarterProperties.class)
 @Configuration
 public class WebFluxStarterApplicationConfig {
+
+    @Bean
+    @ConditionalOnProperty(prefix = "aurora.webflux.errorHandler", name = "enabled", matchIfMissing = true)
+    public AuroraTraceErrorHandler auroraErrorHandler(
+        @Value("${spring.zipkin.base-url:http://localhost:9411}") String baseUrl
+    ) {
+        return new AuroraTraceErrorHandler(baseUrl);
+    }
+
     @Bean
     @ConditionalOnProperty(prefix = "aurora.webflux.header.webclient.interceptor", name = "enabled")
     public WebClientCustomizer webClientCustomizer(
