@@ -36,4 +36,11 @@ class AuroraTraceErrorHandlerTest {
 
         assertThat(isTraceError).isFalse()
     }
+
+    @Test
+    fun `Exception with no cause Throwable is not trace error`() {
+        val isTraceError = errorHandler.isTraceError(RuntimeException("", null))
+
+        assertThat(isTraceError).isFalse()
+    }
 }
