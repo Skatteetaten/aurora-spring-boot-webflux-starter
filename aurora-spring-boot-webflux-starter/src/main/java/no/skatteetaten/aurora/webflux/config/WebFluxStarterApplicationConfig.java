@@ -9,9 +9,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import brave.http.HttpRequestParser;
-import no.skatteetaten.aurora.webflux.AuroraTraceErrorHandler;
 import no.skatteetaten.aurora.webflux.AuroraRequestParser;
 import no.skatteetaten.aurora.webflux.AuroraSpanHandler;
+import no.skatteetaten.aurora.webflux.AuroraTraceErrorHandler;
 import no.skatteetaten.aurora.webflux.AuroraWebClientCustomizer;
 
 @EnableConfigurationProperties(WebFluxStarterProperties.class)

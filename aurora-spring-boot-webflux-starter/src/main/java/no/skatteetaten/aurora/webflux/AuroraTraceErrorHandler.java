@@ -15,7 +15,7 @@ public class AuroraTraceErrorHandler {
         Hooks.onErrorDropped(error -> {
             Throwable cause = error.getCause();
             if (isTraceError(cause)) {
-                logger.warn(error.getMessage());
+                logger.warn("Failed to send trace data: {}", error.getMessage());
             } else {
                 logger.error(error.getMessage(), error);
             }
