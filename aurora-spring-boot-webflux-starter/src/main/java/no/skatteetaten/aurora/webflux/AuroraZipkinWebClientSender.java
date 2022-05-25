@@ -38,6 +38,7 @@ public class AuroraZipkinWebClientSender extends Sender {
 
     public AuroraZipkinWebClientSender(WebClient webClient, String baseUrl, String apiPath,
         BytesEncoder<Span> encoder) {
+        logger.info("Loading Aurora ZipKin WebClient sender");
         this.webClient = webClient;
         this.url = buildUrlWithCustomPathIfNecessary(baseUrl, apiPath,
             baseUrl + (baseUrl.endsWith("/") ? "" : "/") + "api/v2/spans");
