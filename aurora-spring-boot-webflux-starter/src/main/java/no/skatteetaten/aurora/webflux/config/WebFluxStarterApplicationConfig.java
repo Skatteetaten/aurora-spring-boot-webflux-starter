@@ -4,27 +4,24 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer;
+import org.springframework.cloud.sleuth.autoconfig.zipkin2.ZipkinAutoConfiguration;
 import org.springframework.cloud.sleuth.instrument.web.HttpServerRequestParser;
+import org.springframework.cloud.sleuth.zipkin2.ZipkinProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import brave.http.HttpRequestParser;
 import no.skatteetaten.aurora.webflux.AuroraRequestParser;
 import no.skatteetaten.aurora.webflux.AuroraSpanHandler;
-import no.skatteetaten.aurora.webflux.AuroraTraceErrorHandler;
 import no.skatteetaten.aurora.webflux.AuroraWebClientCustomizer;
+import no.skatteetaten.aurora.webflux.AuroraZipkinWebClientSender;
+import zipkin2.reporter.Sender;
 
-@EnableConfigurationProperties(WebFluxStarterProperties.class)
+@EnableConfigurationProperties({ZipkinProperties.class, WebFluxStarterProperties.class})
 @Configuration
 public class WebFluxStarterApplicationConfig {
-
-    @Bean
-    @ConditionalOnProperty(prefix = "aurora.webflux.errorHandler", name = "enabled", matchIfMissing = true)
-    public AuroraTraceErrorHandler auroraErrorHandler(
-        @Value("${spring.zipkin.base-url:http://localhost:9411}") String baseUrl
-    ) {
-        return new AuroraTraceErrorHandler(baseUrl);
-    }
 
     @Bean
     @ConditionalOnProperty(prefix = "aurora.webflux.header.webclient.interceptor", name = "enabled")
@@ -36,6 +33,12 @@ public class WebFluxStarterApplicationConfig {
         String fallbackKlientId = !appVersion.isBlank() ? String.format("%s/%s", appName, appVersion) : appName;
         String klientId = !klientIdEnv.isBlank() ? klientIdEnv : fallbackKlientId;
         return new AuroraWebClientCustomizer(klientId);
+    }
+
+    @Bean(ZipkinAutoConfiguration.SENDER_BEAN_NAME)
+    @Primary
+    public Sender zipkinSender(ZipkinProperties zipkin, WebClient.Builder builder) {
+        return new AuroraZipkinWebClientSender(builder.build(), zipkin.getBaseUrl(), zipkin.getApiPath(), zipkin.getEncoder());
     }
 
     @Bean(HttpServerRequestParser.NAME)

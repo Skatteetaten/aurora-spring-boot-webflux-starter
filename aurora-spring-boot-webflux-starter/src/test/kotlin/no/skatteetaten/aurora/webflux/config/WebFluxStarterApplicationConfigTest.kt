@@ -5,10 +5,11 @@ import assertk.assertions.isNull
 import no.skatteetaten.aurora.webflux.AuroraRequestParser
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientAutoConfiguration
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest(
-    classes = [WebFluxStarterApplicationConfig::class],
+    classes = [WebClientAutoConfiguration::class, WebFluxStarterApplicationConfig::class],
     properties = ["aurora.webflux.header.filter.enabled=false"]
 )
 class WebFluxStarterApplicationConfigTest {
