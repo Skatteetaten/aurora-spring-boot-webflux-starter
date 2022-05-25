@@ -5,6 +5,7 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.web.reactive.function.client.WebClient
@@ -18,6 +19,13 @@ class AuroraZipkinWebClientSenderTest {
     @BeforeEach
     fun setUp() {
         server.start(9411)
+    }
+
+    @AfterEach
+    fun tearDown() {
+        runCatching {
+            server.shutdown()
+        }
     }
 
     @Test

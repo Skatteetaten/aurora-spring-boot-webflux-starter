@@ -54,7 +54,7 @@ open class AbstractAuroraHeaderWebFilterTest {
 
     @AfterEach
     fun tearDown() {
-        kotlin.runCatching {
+        runCatching {
             server.shutdown()
         }
     }

@@ -14,6 +14,7 @@ import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junitpioneer.jupiter.SetEnvironmentVariable
@@ -61,6 +62,13 @@ class AuroraRequestParserTest {
     @BeforeEach
     fun setUp() {
         server.start(9411)
+    }
+
+    @AfterEach
+    fun tearDown() {
+        runCatching {
+            server.shutdown()
+        }
     }
 
     @SetEnvironmentVariable(key = ENV_VARIABEL_CLUSTER, value = "local")

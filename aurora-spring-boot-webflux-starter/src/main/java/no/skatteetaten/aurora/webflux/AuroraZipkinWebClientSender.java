@@ -20,10 +20,16 @@ import zipkin2.reporter.Sender;
 
 /**
  * Based on HttpSender from spring-cloud-sleuth.
- * <a href="https://github.com/spring-cloud/spring-cloud-sleuth/blob/3.1.x/spring-cloud-sleuth-zipkin/src/main/java/org/springframework/cloud/sleuth/zipkin2/HttpSender.java">HttpSender</a>
+ * <a href="https://github.com/spring-cloud/spring-cloud-sleuth/blob/3.1.x/spring-cloud-sleuth-zipkin
+ *          /src/main/java/org/springframework/cloud/sleuth/zipkin2/HttpSender.java">
+ *     HttpSender
+ * </a>
  */
 public class AuroraZipkinWebClientSender extends Sender {
     private static final Logger logger = LoggerFactory.getLogger(AuroraZipkinWebClientSender.class);
+    private static final long DEFAULT_TIMEOUT = 1000;
+    // This will drop a span larger than 5MiB. Note: values like 512KiB benchmark better.
+    private static final int MESSAGE_MAX_BYTES = 5 * 1024 * 1024;
     private final WebClient webClient;
     private final String url;
     private final Encoding encoding;
@@ -56,7 +62,7 @@ public class AuroraZipkinWebClientSender extends Sender {
 
     @Override
     public int messageMaxBytes() {
-        return 5242880;
+        return MESSAGE_MAX_BYTES;
     }
 
     @Override
@@ -87,10 +93,10 @@ public class AuroraZipkinWebClientSender extends Sender {
             .retrieve()
             .toBodilessEntity()
             .onErrorResume(error -> {
-                logger.error(error.getMessage());
+                logger.warn("Unable to send trace data: {}", error.getMessage());
                 return Mono.empty();
             })
-            .timeout(Duration.ofMillis(1000))
+            .timeout(Duration.ofMillis(DEFAULT_TIMEOUT))
             .block();
     }
 

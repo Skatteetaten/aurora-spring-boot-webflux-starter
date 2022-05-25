@@ -18,3 +18,5 @@ management:
 
 logging.level.zipkin2.reporter: ERROR
 logging.level.no.skatteetaten.aurora.webflux: DEBUG
+# disable for tests that uses the default HttpSender for zipkin, which causes stack traces
+logging.level.reactor.core.publisher.Operators: OFF

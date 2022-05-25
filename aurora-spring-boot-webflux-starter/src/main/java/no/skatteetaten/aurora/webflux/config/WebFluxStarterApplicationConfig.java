@@ -19,12 +19,15 @@ import no.skatteetaten.aurora.webflux.AuroraWebClientCustomizer;
 import no.skatteetaten.aurora.webflux.AuroraZipkinWebClientSender;
 import zipkin2.reporter.Sender;
 
-@EnableConfigurationProperties({ZipkinProperties.class, WebFluxStarterProperties.class})
+@EnableConfigurationProperties({ ZipkinProperties.class, WebFluxStarterProperties.class })
 @Configuration
 public class WebFluxStarterApplicationConfig {
 
     @Bean
-    @ConditionalOnProperty(prefix = "aurora.webflux.header.webclient.interceptor", name = "enabled")
+    @ConditionalOnProperty(
+        prefix = "aurora.webflux.header.webclient.interceptor",
+        name = "enabled",
+        havingValue = "true")
     public WebClientCustomizer webClientCustomizer(
         @Value("${spring.application.name:}") String appName,
         @Value("${app.version:}") String appVersion,
@@ -35,10 +38,18 @@ public class WebFluxStarterApplicationConfig {
         return new AuroraWebClientCustomizer(klientId);
     }
 
+    @ConditionalOnProperty(
+        prefix = "aurora.webflux.zipkin-sender",
+        name = "enabled",
+        havingValue = "true",
+        matchIfMissing = true)
     @Bean(ZipkinAutoConfiguration.SENDER_BEAN_NAME)
     @Primary
     public Sender zipkinSender(ZipkinProperties zipkin, WebClient.Builder builder) {
-        return new AuroraZipkinWebClientSender(builder.build(), zipkin.getBaseUrl(), zipkin.getApiPath(), zipkin.getEncoder());
+        return new AuroraZipkinWebClientSender(builder.build(),
+            zipkin.getBaseUrl(),
+            zipkin.getApiPath(),
+            zipkin.getEncoder());
     }
 
     @Bean(HttpServerRequestParser.NAME)
