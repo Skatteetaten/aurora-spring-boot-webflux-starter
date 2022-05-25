@@ -32,3 +32,11 @@ dependencies {
     testImplementation("com.squareup.okhttp3:mockwebserver:${Versions.mockwebserver}")
     testImplementation("org.awaitility:awaitility-kotlin:${Versions.awaitility}")
 }
+
+tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
+    archiveClassifier.set("boot")
+}
+
+tasks.named<Jar>("jar") {
+    archiveClassifier.set("")
+}
