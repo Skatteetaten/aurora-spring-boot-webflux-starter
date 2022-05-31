@@ -17,4 +17,4 @@ management:
         port: -1
 
 logging.level.zipkin2.reporter: ERROR
-# logging.level.no.skatteetaten.aurora.webflux: DEBUG
+logging.level.no.skatteetaten.aurora.webflux: DEBUG
