@@ -33,7 +33,7 @@ class WebFluxStarterApplicationConfigTest {
 
     @SpringBootTest(
         classes = [WebFluxStarterApplicationConfig::class],
-        properties = ["aurora.webflux.trace.auth.username=test123"] // no password set
+        properties = ["trace.auth.username=test123"] // no password set
     )
     @Nested
     inner class TraceAuthDisabled {
@@ -48,7 +48,7 @@ class WebFluxStarterApplicationConfigTest {
 
     @SpringBootTest(
         classes = [WebFluxStarterApplicationConfig::class, TestConfig::class],
-        properties = ["aurora.webflux.trace.auth.username=test123", "aurora.webflux.trace.auth.password=test234"]
+        properties = ["trace.auth.username=test123", "trace.auth.password=test234"]
     )
     @Nested
     inner class TraceAuthEnabled {
