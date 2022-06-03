@@ -5,8 +5,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer;
 import org.springframework.cloud.sleuth.instrument.web.HttpServerRequestParser;
+import org.springframework.cloud.sleuth.zipkin2.ZipkinWebClientBuilderProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import brave.http.HttpRequestParser;
 import no.skatteetaten.aurora.webflux.AuroraRequestParser;
@@ -23,8 +25,8 @@ public class WebFluxStarterApplicationConfig {
         @Value("${app.version:}") String appVersion,
         @Value("${aurora.klientid:}") String klientIdEnv
     ) {
-        String fallbackKlientId = !appVersion.isBlank() ? String.format("%s/%s", appName, appVersion) : appName;
-        String klientId = !klientIdEnv.isBlank() ? klientIdEnv : fallbackKlientId;
+        String fallbackKlientId = appVersion.isBlank() ? appName : String.format("%s/%s", appName, appVersion);
+        String klientId = klientIdEnv.isBlank() ? fallbackKlientId : klientIdEnv;
         return new AuroraWebClientCustomizer(klientId);
     }
 
@@ -38,5 +40,15 @@ public class WebFluxStarterApplicationConfig {
     @ConditionalOnProperty(prefix = "spring.zipkin", name = "enabled", havingValue = "false", matchIfMissing = true)
     public AuroraSpanHandler auroraSpanHandler() {
         return new AuroraSpanHandler();
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "trace.auth", name = { "username", "password" })
+    public ZipkinWebClientBuilderProvider zipkinWebClientBuilderProvider(
+        @Value("trace.auth.username") String username,
+        @Value("trace.auth.password") String password,
+        WebClient.Builder builder
+    ) {
+        return () -> builder.defaultHeaders((headers) -> headers.setBasicAuth(username, password));
     }
 }

@@ -8,9 +8,8 @@ def config = [
     docs: false,
     sonarQube: false,
     openShiftBuild: false,
-    versionStrategy: [
-            [ branch: 'master', versionHint: '1']
-    ],
+    manualReleaseEnabled: true,
+    versionStrategy: [],
     iqOrganizationName: "Team AOS",
     compilePropertiesIq: "-x test",
     chatRoom: "#aos-notifications",
