@@ -1,17 +1,19 @@
 package no.skatteetaten.aurora.webflux.config
 
 import assertk.assertThat
-import assertk.assertions.isNotNull
+import assertk.assertions.isEqualTo
 import assertk.assertions.isNull
 import assertk.assertions.isTrue
 import no.skatteetaten.aurora.webflux.AuroraRequestParser
 import no.skatteetaten.aurora.webflux.TestConfig
+import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junitpioneer.jupiter.SetEnvironmentVariable
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.cloud.sleuth.zipkin2.ZipkinWebClientBuilderProvider
-import java.net.http.HttpHeaders
+import org.springframework.http.HttpHeaders
 
 
 class WebFluxStarterApplicationConfigTest {
@@ -59,7 +61,16 @@ class WebFluxStarterApplicationConfigTest {
         fun `Trace auth enabled and default Authorization header is set`() {
             val builder = zipkinBuilder!!.zipkinWebClientBuilder()
             builder.defaultHeaders {
-                assertThat(it.containsKey(org.springframework.http.HttpHeaders.AUTHORIZATION)).isTrue()
+                assertThat(it.containsKey(HttpHeaders.AUTHORIZATION)).isTrue()
+            }
+        }
+
+        @SetEnvironmentVariable(key = ENV_VAR_AURORA_KLIENTID, value = "affiliation/app/1.2.3")
+        @Test
+        fun `OrgId header set`() {
+            val builder = zipkinBuilder!!.zipkinWebClientBuilder()
+            builder.defaultHeaders {
+                assertThat(it.getFirst(HEADER_ORGID)).isEqualTo("affiliation")
             }
         }
     }
