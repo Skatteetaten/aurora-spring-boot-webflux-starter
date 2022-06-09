@@ -18,6 +18,10 @@ import no.skatteetaten.aurora.webflux.AuroraWebClientCustomizer;
 @EnableConfigurationProperties(WebFluxStarterProperties.class)
 @Configuration
 public class WebFluxStarterApplicationConfig {
+
+    public static final String HEADER_ORGID = "X-Scope-OrgID";
+    public static final String ENV_VAR_AURORA_KLIENTID = "AURORA_KLIENTID";
+
     @Bean
     @ConditionalOnProperty(prefix = "aurora.webflux.header.webclient.interceptor", name = "enabled")
     public WebClientCustomizer webClientCustomizer(
@@ -49,6 +53,15 @@ public class WebFluxStarterApplicationConfig {
         @Value("trace.auth.password") String password,
         WebClient.Builder builder
     ) {
-        return () -> builder.defaultHeaders((headers) -> headers.setBasicAuth(username, password));
+
+        return () -> builder.defaultHeaders((headers) -> {
+            headers.setBasicAuth(username, password);
+
+            String klientId = System.getenv(ENV_VAR_AURORA_KLIENTID);
+            if (klientId != null && klientId.contains("/")) {
+                String affiliation = klientId.substring(0, klientId.indexOf("/"));
+                headers.set(HEADER_ORGID, affiliation);
+            }
+        });
     }
 }
