@@ -9,6 +9,9 @@ aurora:
                 interceptor:
                     enabled: true
 
+openshift:
+    cluster: local
+
 server:
     shutdown: immediate
 

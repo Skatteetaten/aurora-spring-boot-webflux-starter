@@ -6,10 +6,9 @@ import assertk.assertions.isNull
 import assertk.assertions.isTrue
 import no.skatteetaten.aurora.webflux.AuroraRequestParser
 import no.skatteetaten.aurora.webflux.TestConfig
-import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig.*
+import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig.HEADER_ORGID
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junitpioneer.jupiter.SetEnvironmentVariable
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.cloud.sleuth.zipkin2.ZipkinWebClientBuilderProvider
@@ -50,7 +49,7 @@ class WebFluxStarterApplicationConfigTest {
 
     @SpringBootTest(
         classes = [WebFluxStarterApplicationConfig::class, TestConfig::class],
-        properties = ["trace.auth.username=test123", "trace.auth.password=test234"]
+        properties = ["trace.auth.username=test123", "trace.auth.password=test234", "aurora.klientid=affiliation/app/1.2.3"]
     )
     @Nested
     inner class TraceAuthEnabled {
@@ -65,7 +64,6 @@ class WebFluxStarterApplicationConfigTest {
             }
         }
 
-        @SetEnvironmentVariable(key = ENV_VAR_AURORA_KLIENTID, value = "affiliation/app/1.2.3")
         @Test
         fun `OrgId header set`() {
             val builder = zipkinBuilder!!.zipkinWebClientBuilder()
@@ -74,5 +72,4 @@ class WebFluxStarterApplicationConfigTest {
             }
         }
     }
-
 }

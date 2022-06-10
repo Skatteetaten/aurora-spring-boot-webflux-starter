@@ -20,7 +20,6 @@ import no.skatteetaten.aurora.webflux.AuroraWebClientCustomizer;
 public class WebFluxStarterApplicationConfig {
 
     public static final String HEADER_ORGID = "X-Scope-OrgID";
-    public static final String ENV_VAR_AURORA_KLIENTID = "AURORA_KLIENTID";
 
     @Bean
     @ConditionalOnProperty(prefix = "aurora.webflux.header.webclient.interceptor", name = "enabled")
@@ -36,8 +35,8 @@ public class WebFluxStarterApplicationConfig {
 
     @Bean(HttpServerRequestParser.NAME)
     @ConditionalOnProperty(prefix = "aurora.webflux.header.filter", name = "enabled", matchIfMissing = true)
-    public HttpRequestParser sleuthHttpServerRequestParser() {
-        return new AuroraRequestParser();
+    public HttpRequestParser sleuthHttpServerRequestParser(@Value("${openshift.cluster:}") String cluster) {
+        return new AuroraRequestParser(cluster);
     }
 
     @Bean
@@ -49,17 +48,17 @@ public class WebFluxStarterApplicationConfig {
     @Bean
     @ConditionalOnProperty(prefix = "trace.auth", name = { "username", "password" })
     public ZipkinWebClientBuilderProvider zipkinWebClientBuilderProvider(
-        @Value("trace.auth.username") String username,
-        @Value("trace.auth.password") String password,
+        @Value("${trace.auth.username}") String username,
+        @Value("${trace.auth.password}") String password,
+        @Value("${aurora.klientid:}") String klientid,
         WebClient.Builder builder
     ) {
 
         return () -> builder.defaultHeaders((headers) -> {
             headers.setBasicAuth(username, password);
 
-            String klientId = System.getenv(ENV_VAR_AURORA_KLIENTID);
-            if (klientId != null && klientId.contains("/")) {
-                String affiliation = klientId.substring(0, klientId.indexOf("/"));
+            if (klientid != null && klientid.contains("/")) {
+                String affiliation = klientid.substring(0, klientid.indexOf("/"));
                 headers.set(HEADER_ORGID, affiliation);
             }
         });
