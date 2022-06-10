@@ -80,7 +80,7 @@ class AuroraRequestParserTest {
         assertThat(requestHeaders[KORRELASJONSID_FIELD]).isNotNull().isNotEmpty()
         assertThat(requestHeaders[MELDINGSID_FIELD]).isEqualTo("meldingsid")
         assertThat(requestHeaders[KLIENTID_FIELD]).isEqualTo("klientid")
-        assertThat(request.getCluster()).isEqualTo("local")
+        assertThat(request.getCluster()).isNotEmpty()
     }
 
     private fun RecordedRequest.getCluster() =
