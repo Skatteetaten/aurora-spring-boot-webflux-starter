@@ -5,7 +5,7 @@ Alle viktige endringer i dette prosjektet vil bli dokumentert i denne filen.
 Formatet i denne filen er basert på [Keep a Changelog](http://keepachangelog.com/)
 og prosjektet følger [Semantic Versioning](http://semver.org/).
 
-## [1.4.8] - 2022-06-10
+## [1.4.9] - 2022-06-10
 - Updated to use spring properties instead of environment variables directly
 
 ## [1.4.6] - 2022-06-09
