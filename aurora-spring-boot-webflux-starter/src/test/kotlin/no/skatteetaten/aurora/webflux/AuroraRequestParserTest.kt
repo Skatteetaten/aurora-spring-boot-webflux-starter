@@ -5,7 +5,6 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isNotEmpty
 import assertk.assertions.isNotNull
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import no.skatteetaten.aurora.webflux.AuroraRequestParser.ENV_VARIABEL_CLUSTER
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGSID_FIELD
@@ -16,7 +15,6 @@ import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junitpioneer.jupiter.SetEnvironmentVariable
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -63,7 +61,6 @@ class AuroraRequestParserTest {
         server.start(9411)
     }
 
-    @SetEnvironmentVariable(key = ENV_VARIABEL_CLUSTER, value = "local")
     @Test
     fun `Given request headers set same values on MDC and generate Korrelasjonsid fails if zipkin disabled`() {
         server.enqueue(MockResponse())
