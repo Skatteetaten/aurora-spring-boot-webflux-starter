@@ -54,7 +54,7 @@ public class AuroraRequestParser implements HttpRequestParser {
             span.tag(TRACE_TAG_CLUSTER, cluster);
         }
 
-        if(podName != null && !podName.isEmpty()) {
+        if (podName != null && !podName.isEmpty()) {
             span.tag(TRACE_TAG_POD, podName);
         }
 
