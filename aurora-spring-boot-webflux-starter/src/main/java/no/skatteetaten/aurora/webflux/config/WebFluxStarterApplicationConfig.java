@@ -35,8 +35,10 @@ public class WebFluxStarterApplicationConfig {
 
     @Bean(HttpServerRequestParser.NAME)
     @ConditionalOnProperty(prefix = "aurora.webflux.header.filter", name = "enabled", matchIfMissing = true)
-    public HttpRequestParser sleuthHttpServerRequestParser(@Value("${openshift.cluster:}") String cluster) {
-        return new AuroraRequestParser(cluster);
+    public HttpRequestParser sleuthHttpServerRequestParser(
+        @Value("${openshift.cluster:}") String cluster,
+        @Value("${pod.name:}") String podName) {
+        return new AuroraRequestParser(cluster, podName);
     }
 
     @Bean
