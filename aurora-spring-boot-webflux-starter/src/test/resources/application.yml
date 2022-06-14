@@ -13,7 +13,7 @@ openshift:
     cluster: local
 
 pod:
-    name: test123
+    name: test-123
 
 server:
     shutdown: immediate

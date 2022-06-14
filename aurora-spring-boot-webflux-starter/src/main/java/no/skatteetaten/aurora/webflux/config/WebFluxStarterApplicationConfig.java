@@ -35,16 +35,16 @@ public class WebFluxStarterApplicationConfig {
 
     @Bean(HttpServerRequestParser.NAME)
     @ConditionalOnProperty(prefix = "aurora.webflux.header.filter", name = "enabled", matchIfMissing = true)
-    public HttpRequestParser sleuthHttpServerRequestParser(
-        @Value("${openshift.cluster:}") String cluster,
-        @Value("${pod.name:}") String podName) {
-        return new AuroraRequestParser(cluster, podName);
+    public HttpRequestParser sleuthHttpServerRequestParser() {
+        return new AuroraRequestParser();
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "spring.zipkin", name = "enabled", havingValue = "false", matchIfMissing = true)
-    public AuroraSpanHandler auroraSpanHandler() {
-        return new AuroraSpanHandler();
+    public AuroraSpanHandler auroraSpanHandler(
+        @Value("${openshift.cluster:}") String cluster,
+        @Value("${pod.name:}") String podName,
+        @Value("${aurora.klientid:}") String klientid) {
+        return new AuroraSpanHandler(cluster, podName, klientid);
     }
 
     @Bean
