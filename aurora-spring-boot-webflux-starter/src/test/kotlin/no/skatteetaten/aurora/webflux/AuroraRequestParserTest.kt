@@ -9,10 +9,10 @@ import no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGSID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.TRACE_TAG_CLUSTER
+import no.skatteetaten.aurora.webflux.AuroraRequestParser.TRACE_TAG_POD
 import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
@@ -75,16 +75,19 @@ class AuroraRequestParserTest {
                 .block()!!
 
         val request = server.takeRequest()
-
+        val body = request.body.readUtf8()
 
         assertThat(requestHeaders[KORRELASJONSID_FIELD]).isNotNull().isNotEmpty()
         assertThat(requestHeaders[MELDINGSID_FIELD]).isEqualTo("meldingsid")
         assertThat(requestHeaders[KLIENTID_FIELD]).isEqualTo("klientid")
-        assertThat(request.getCluster()).isNotEmpty()
+        assertThat(body.getTag(TRACE_TAG_CLUSTER)).isNotEmpty()
+        assertThat(body.getTag(TRACE_TAG_POD)).isNotEmpty()
     }
 
-    private fun RecordedRequest.getCluster() =
+    private fun String.getTag(tagName: String) =
         jacksonObjectMapper()
-            .readTree(body.readUtf8()).get(0).at("/tags")[TRACE_TAG_CLUSTER].toString()
+            .readTree(this)
+            .get(0)
+            .at("/tags")[tagName].toString()
             .removeSurrounding("\"")
 }

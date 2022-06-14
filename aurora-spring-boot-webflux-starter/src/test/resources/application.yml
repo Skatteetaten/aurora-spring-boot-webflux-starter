@@ -12,6 +12,9 @@ aurora:
 openshift:
     cluster: local
 
+pod:
+    name: test123
+
 server:
     shutdown: immediate
 
