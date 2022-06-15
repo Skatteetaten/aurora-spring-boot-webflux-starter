@@ -3,6 +3,7 @@ package no.skatteetaten.aurora.webflux
 import assertk.assertThat
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
+import assertk.assertions.isNotEmpty
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import no.skatteetaten.aurora.webflux.AuroraSpanHandler.TRACE_TAG_AURORA_KLIENTID
 import no.skatteetaten.aurora.webflux.AuroraSpanHandler.TRACE_TAG_CLUSTER
@@ -44,7 +45,7 @@ class AuroraSpanHandlerTest {
     }
 
     @Test
-    fun `test test`() {
+    fun `Get trace tags from request`() {
         server.enqueue(MockResponse())
 
         WebClient.create("http://localhost:$port/mdc")
@@ -56,7 +57,7 @@ class AuroraSpanHandlerTest {
         val request = server.takeRequest()
         val body = request.body.readUtf8()
 
-        assertThat(body.getTag(TRACE_TAG_CLUSTER)).isEqualTo("local")
+        assertThat(body.getTag(TRACE_TAG_CLUSTER)).isNotEmpty()
         assertThat(body.getTag(TRACE_TAG_POD)).isEqualTo("test-123")
         assertThat(body.getTag(TRACE_TAG_ENVIRONMENT)).isEqualTo("test-dev")
         assertThat(body.getTag(TRACE_TAG_AURORA_KLIENTID)).isEmpty()
