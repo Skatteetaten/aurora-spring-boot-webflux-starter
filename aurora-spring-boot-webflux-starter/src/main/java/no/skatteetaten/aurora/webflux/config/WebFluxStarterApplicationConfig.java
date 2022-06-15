@@ -43,8 +43,11 @@ public class WebFluxStarterApplicationConfig {
     public AuroraSpanHandler auroraSpanHandler(
         @Value("${openshift.cluster:}") String cluster,
         @Value("${pod.name:}") String podName,
-        @Value("${aurora.klientid:}") String klientid) {
-        return new AuroraSpanHandler(cluster, podName, klientid);
+        @Value("${aurora.klientid:}") String klientid,
+        // Using namespace to set environment to match what is implemented in splunk
+        @Value("${pod.namespace:}") String environment
+    ) {
+        return new AuroraSpanHandler(cluster, podName, klientid, environment);
     }
 
     @Bean

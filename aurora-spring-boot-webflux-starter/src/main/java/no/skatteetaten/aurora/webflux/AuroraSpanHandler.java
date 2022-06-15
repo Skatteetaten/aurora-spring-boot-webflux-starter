@@ -14,17 +14,20 @@ public class AuroraSpanHandler extends SpanHandler {
 
     static final String TRACE_TAG_CLUSTER = TRACE_TAG_PREFIX + "cluster";
     static final String TRACE_TAG_POD = TRACE_TAG_PREFIX + "pod";
+    static final String TRACE_TAG_ENVIRONMENT = TRACE_TAG_PREFIX + "environment";
     static final String TRACE_TAG_AURORA_KLIENTID = TRACE_TAG_PREFIX + "aurora.klientid";
 
     private final String cluster;
     private final String podName;
     private final String klientid;
+    private final String environment;
 
-    public AuroraSpanHandler(String cluster, String podName, String klientid) {
+    public AuroraSpanHandler(String cluster, String podName, String klientid, String environment) {
         logger.debug("Starting the Aurora span handler");
         this.cluster = cluster;
         this.podName = podName;
         this.klientid = klientid;
+        this.environment = environment;
     }
 
     @Override
@@ -39,6 +42,10 @@ public class AuroraSpanHandler extends SpanHandler {
 
         if (hasValue(klientid)) {
             span.tag(TRACE_TAG_AURORA_KLIENTID, klientid);
+        }
+
+        if (hasValue(environment)) {
+            span.tag(TRACE_TAG_ENVIRONMENT, environment);
         }
 
         return super.end(context, span, cause);

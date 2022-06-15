@@ -6,6 +6,7 @@ import assertk.assertions.isEqualTo
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import no.skatteetaten.aurora.webflux.AuroraSpanHandler.TRACE_TAG_AURORA_KLIENTID
 import no.skatteetaten.aurora.webflux.AuroraSpanHandler.TRACE_TAG_CLUSTER
+import no.skatteetaten.aurora.webflux.AuroraSpanHandler.TRACE_TAG_ENVIRONMENT
 import no.skatteetaten.aurora.webflux.AuroraSpanHandler.TRACE_TAG_POD
 import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig
 import okhttp3.mockwebserver.MockResponse
@@ -57,6 +58,7 @@ class AuroraSpanHandlerTest {
 
         assertThat(body.getTag(TRACE_TAG_CLUSTER)).isEqualTo("local")
         assertThat(body.getTag(TRACE_TAG_POD)).isEqualTo("test-123")
+        assertThat(body.getTag(TRACE_TAG_ENVIRONMENT)).isEqualTo("test-dev")
         assertThat(body.getTag(TRACE_TAG_AURORA_KLIENTID)).isEmpty()
     }
 
