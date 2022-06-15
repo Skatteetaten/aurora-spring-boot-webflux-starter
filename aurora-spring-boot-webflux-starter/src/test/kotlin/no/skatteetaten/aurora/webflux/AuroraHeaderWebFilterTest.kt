@@ -18,10 +18,10 @@ import assertk.assertions.isNotNull
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGSID_FIELD
-import no.skatteetaten.aurora.webflux.AuroraRequestParser.USER_AGENT_FIELD
 import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import org.springframework.http.HttpHeaders
 
 @TestConfiguration
 open class TestConfig {
@@ -72,7 +72,7 @@ class AuroraHeaderWebFilterDefaultTest : AbstractAuroraHeaderWebFilterTest() {
         val headers = request.headers
         assertThat(headers[KORRELASJONSID_FIELD]).isNotNull().isNotEmpty()
         assertThat(headers[MELDINGSID_FIELD]).isNotNull().isNotEmpty()
-        assertThat(headers[USER_AGENT_FIELD]).isEqualTo("webflux-starter")
+        assertThat(headers[HttpHeaders.USER_AGENT]).isEqualTo("webflux-starter")
         assertThat(headers[KLIENTID_FIELD]).isEqualTo("webflux-starter")
     }
 }
@@ -90,7 +90,7 @@ class AuroraHeaderWebFilterKlientIdEnvTest : AbstractAuroraHeaderWebFilterTest()
 
         val headers = request.headers
         assertThat(headers[KLIENTID_FIELD]).isNotNull().isEqualTo("segment/webflux-starter/1.0.0")
-        assertThat(headers[USER_AGENT_FIELD]).isNotNull().isEqualTo("segment/webflux-starter/1.0.0")
+        assertThat(headers[HttpHeaders.USER_AGENT]).isNotNull().isEqualTo("segment/webflux-starter/1.0.0")
     }
 }
 @TestPropertySource(properties = ["app.version=1.0.0"])
@@ -106,6 +106,6 @@ class AuroraHeaderWebFilterVersionEnvTest : AbstractAuroraHeaderWebFilterTest() 
 
         val headers = request.headers
         assertThat(headers[KLIENTID_FIELD]).isNotNull().isEqualTo("webflux-starter/1.0.0")
-        assertThat(headers[USER_AGENT_FIELD]).isNotNull().isEqualTo("webflux-starter/1.0.0")
+        assertThat(headers[HttpHeaders.USER_AGENT]).isNotNull().isEqualTo("webflux-starter/1.0.0")
     }
 }

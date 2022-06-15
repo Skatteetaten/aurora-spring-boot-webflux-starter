@@ -15,7 +15,6 @@ import brave.propagation.TraceContext;
 public class AuroraRequestParser implements HttpRequestParser {
     private static final Logger logger = LoggerFactory.getLogger(AuroraRequestParser.class);
 
-    public static final String USER_AGENT_FIELD = "User-Agent";
     public static final String KORRELASJONSID_FIELD = "Korrelasjonsid";
     public static final String MELDINGSID_FIELD = "Meldingsid";
     public static final String KLIENTID_FIELD = "Klientid";
