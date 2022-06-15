@@ -10,7 +10,7 @@ import brave.handler.SpanHandler;
 import brave.propagation.TraceContext;
 
 public class AuroraSpanHandler extends SpanHandler {
-    private static final Logger logger = LoggerFactory.getLogger(AuroraRequestParser.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuroraSpanHandler.class);
 
     static final String TRACE_TAG_CLUSTER = TRACE_TAG_PREFIX + "cluster";
     static final String TRACE_TAG_POD = TRACE_TAG_PREFIX + "pod";
