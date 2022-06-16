@@ -15,21 +15,13 @@ import brave.propagation.TraceContext;
 public class AuroraRequestParser implements HttpRequestParser {
     private static final Logger logger = LoggerFactory.getLogger(AuroraRequestParser.class);
 
-    public static final String USER_AGENT_FIELD = "User-Agent";
     public static final String KORRELASJONSID_FIELD = "Korrelasjonsid";
     public static final String MELDINGSID_FIELD = "Meldingsid";
     public static final String KLIENTID_FIELD = "Klientid";
 
-    private static final String TRACE_TAG_PREFIX = "aurora.";
+    static final String TRACE_TAG_PREFIX = "skatteetaten.";
     static final String TRACE_TAG_KORRELASJONS_ID = TRACE_TAG_PREFIX + KORRELASJONSID_FIELD.toLowerCase();
     static final String TRACE_TAG_KLIENT_ID = TRACE_TAG_PREFIX + KLIENTID_FIELD.toLowerCase();
-    static final String TRACE_TAG_CLUSTER = TRACE_TAG_PREFIX + "cluster";
-
-    private final String cluster;
-
-    public AuroraRequestParser(String cluster) {
-        this.cluster = cluster;
-    }
 
     @Override
     public void parse(HttpRequest req, TraceContext context, SpanCustomizer span) {
@@ -45,10 +37,6 @@ public class AuroraRequestParser implements HttpRequestParser {
         if (klientid != null) {
             BaggageField.create(KLIENTID_FIELD).updateValue(context, klientid);
             span.tag(TRACE_TAG_KLIENT_ID, klientid);
-        }
-
-        if (cluster != null && !cluster.isEmpty()) {
-            span.tag(TRACE_TAG_CLUSTER, cluster);
         }
 
         String korrelasjonsid = Optional.ofNullable(req.header(KORRELASJONSID_FIELD))

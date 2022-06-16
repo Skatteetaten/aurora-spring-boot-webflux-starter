@@ -5,12 +5,12 @@ import static org.springframework.web.reactive.function.client.ClientRequest.fro
 import static no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD;
 import static no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD;
 import static no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGSID_FIELD;
-import static no.skatteetaten.aurora.webflux.AuroraRequestParser.USER_AGENT_FIELD;
 
 import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import brave.baggage.BaggageField;
@@ -25,7 +25,7 @@ public class AuroraWebClientCustomizer implements WebClientCustomizer {
     @Override
     public void customize(WebClient.Builder builder) {
         builder
-            .defaultHeader(USER_AGENT_FIELD, name)
+            .defaultHeader(HttpHeaders.USER_AGENT, name)
             .defaultHeader(KLIENTID_FIELD, name)
             .filter((request, next) -> next.exchange(
                 from(request)
