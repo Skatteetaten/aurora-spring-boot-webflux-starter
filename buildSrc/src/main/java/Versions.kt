@@ -13,6 +13,6 @@ object Versions {
 }
 
 object PluginVersions {
-    const val aurora = "4.4.22"
+    const val aurora = "4.4.23"
     const val springBoot = "2.6.8"
 }

@@ -7,3 +7,8 @@ pod:
 
 openshift:
     cluster: local
+
+trace:
+    auth:
+        username: test123
+        password: test234
