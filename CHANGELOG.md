@@ -5,7 +5,7 @@ Alle viktige endringer i dette prosjektet vil bli dokumentert i denne filen.
 Formatet i denne filen er basert på [Keep a Changelog](http://keepachangelog.com/)
 og prosjektet følger [Semantic Versioning](http://semver.org/).
 
-## [1.4.12] - 2022-06-22
+## [1.4.13] - 2022-06-22
 - Fixed bug where trace data was included in zipkin requests
 
 ## [1.4.10] - 2022-06-15
