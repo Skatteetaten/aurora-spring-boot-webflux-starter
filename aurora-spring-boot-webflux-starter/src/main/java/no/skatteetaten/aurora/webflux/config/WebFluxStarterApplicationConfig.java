@@ -55,10 +55,9 @@ public class WebFluxStarterApplicationConfig {
     public ZipkinWebClientBuilderProvider zipkinWebClientBuilderProvider(
         @Value("${trace.auth.username}") String username,
         @Value("${trace.auth.password}") String password,
-        @Value("${aurora.klientid:}") String klientid,
-        WebClient.Builder builder
+        @Value("${aurora.klientid:}") String klientid
     ) {
-
+        WebClient.Builder builder = WebClient.builder();
         return () -> builder.defaultHeaders((headers) -> {
             headers.setBasicAuth(username, password);
 
