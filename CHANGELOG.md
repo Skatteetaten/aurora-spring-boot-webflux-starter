@@ -5,15 +5,18 @@ Alle viktige endringer i dette prosjektet vil bli dokumentert i denne filen.
 Formatet i denne filen er basert på [Keep a Changelog](http://keepachangelog.com/)
 og prosjektet følger [Semantic Versioning](http://semver.org/).
 
+## [1.4.14] - 2022-07-07
+- Kotlin skal kun være tilgjengelig på test scope
+
 ## [1.4.13] - 2022-06-22
-- Fixed bug where trace data was included in zipkin requests
+- Fikset bug som gjorde at zipkin requests ble med på trace
 
 ## [1.4.10] - 2022-06-15
-- Set trace tag prefix to `skatteetaten`
-- General tags are now set with AuroraSpanHandler
+- Sette trace tag prefix til `skatteetaten`
+- Generelle tagger er nå satt med AuroraSpanHandler
 
 ## [1.4.9] - 2022-06-10
-- Updated to use spring properties instead of environment variables directly
+- Oppdatert til å bruke spring properties istedet for environment variables
 
 ## [1.4.6] - 2022-06-09
 - Setter X-Scope-OrgID header til affiliation for zipkin requests
