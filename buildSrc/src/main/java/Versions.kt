@@ -1,5 +1,5 @@
 object Versions {
-    const val auroraBaseStarter = "1.3.12"
+    const val auroraBaseStarter = "1.4.0"
 
     const val kotlin = "1.7.10"
     const val kotlinCoroutines = "1.6.4"
