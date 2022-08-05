@@ -1,5 +1,7 @@
 package no.skatteetaten.aurora.webflux.testapp
 
+import brave.CurrentSpanCustomizer
+import brave.SpanCustomizer
 import brave.baggage.BaggageField
 import kotlinx.coroutines.reactive.awaitSingle
 import mu.KotlinLogging
@@ -9,10 +11,15 @@ import no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGSID_FIELD
 import org.slf4j.MDC
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.cloud.sleuth.Span
+import org.springframework.cloud.sleuth.instrument.messaging.DefaultMessageSpanCustomizer
+import org.springframework.cloud.sleuth.instrument.messaging.MessageSpanCustomizer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpHeaders.USER_AGENT
+import org.springframework.messaging.Message
+import org.springframework.messaging.MessageChannel
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
@@ -33,6 +40,41 @@ fun main(args: Array<String>) {
 class TestConfig {
     @Bean
     fun webClient(builder: WebClient.Builder) = builder.baseUrl("http://localhost:8080").build()
+
+     @Bean
+    fun messageSpanCustomizer() = object: MessageSpanCustomizer {
+         override fun customizeHandle(
+             spanCustomizer: Span,
+             message: Message<*>?,
+             messageChannel: MessageChannel?
+         ): Span {
+             return spanCustomizer
+         }
+
+         override fun customizeHandle(
+             builder: Span.Builder,
+             message: Message<*>?,
+             messageChannel: MessageChannel?
+         ): Span.Builder {
+             return builder
+         }
+
+         override fun customizeReceive(
+             builder: Span.Builder,
+             message: Message<*>?,
+             messageChannel: MessageChannel?
+         ): Span.Builder {
+             return builder
+         }
+
+         override fun customizeSend(
+             builder: Span.Builder,
+             message: Message<*>?,
+             messageChannel: MessageChannel?
+         ): Span.Builder {
+             return builder
+         }
+     }
 }
 
 private val logger = KotlinLogging.logger {}
