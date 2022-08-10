@@ -1,5 +1,5 @@
 object Versions {
-    const val auroraBaseStarter = "1.4.0"
+    const val auroraBaseStarter = "1.4.1"
 
     const val kotlin = "1.7.10"
     const val kotlinCoroutines = "1.6.4"
@@ -13,6 +13,6 @@ object Versions {
 }
 
 object PluginVersions {
-    const val aurora = "4.5.1"
+    const val aurora = "4.5.3"
     const val springBoot = "2.7.2"
 }

@@ -31,7 +31,7 @@ public class TestController {
     @GetMapping
     public Mono<Map<String, Object>> get() {
         BaggageField korrelasjonsid = BaggageField.getByName(KORRELASJONSID_FIELD);
-        if(!korrelasjonsid.getValue().equals(MDC.get(KORRELASJONSID_FIELD))) {
+        if (!korrelasjonsid.getValue().equals(MDC.get(KORRELASJONSID_FIELD))) {
             throw new IllegalStateException("Korrelasjonsid from baggage does not match value from mdc");
         }
 

@@ -52,3 +52,15 @@ The headers set are based on these values:
 - `Korrelasjonsid` taken from the incoming Request header. If not found, it will generate a new ID.
 - `Meldingsid` will always generate a new ID.
 - `Klientid` set from the environment variable AURORA_KLIENTID or uses application name with version as fallback (using the `spring.application.name` property and `APP_VERSION` env). The `User-Agent` header will also be set to the same value.
+
+## Project structure
+
+* *aurora-spring-boot-webflux-starter*, the starter code 
+* *buildSrc*, sets common versions for the subprojects 
+* *testapp-java*, java test application 
+* *testapp-kotlin*, kotlin test application
+
+In the aurora-spring-boot-webflux repository there are two test applications, one for java and one for kotlin.
+The test applications are organized in separate subprojects, testapp-java and testapp-kotlin. 
+These projects are created to test the starter, for example to verify that Korrelasjonsid is added properly and that the correct dependencies are on the classpath.
+Both testapps contain a main class that will start a simple application that can be reached on http://localhost:8080

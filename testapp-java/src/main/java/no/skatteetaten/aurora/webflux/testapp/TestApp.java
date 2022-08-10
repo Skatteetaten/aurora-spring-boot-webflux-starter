@@ -6,8 +6,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
 
+@SuppressWarnings("checkstyle:FinalClass")
 @SpringBootApplication
 public class TestApp {
+
+    private TestApp() {
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(TestApp.class, args);
+    }
 
     @Configuration
     public static class TestConfig {
@@ -16,9 +24,5 @@ public class TestApp {
         public WebClient webClient(WebClient.Builder builder) {
             return builder.baseUrl("http://localhost:8080").build();
         }
-    }
-
-    public static void main(String[] args) {
-        SpringApplication.run(TestApp.class, args);
     }
 }
