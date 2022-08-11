@@ -1,4 +1,5 @@
 plugins {
+    kotlin("jvm") version Versions.kotlin
     id("no.skatteetaten.gradle.aurora") version PluginVersions.aurora
     id("org.springframework.boot") version PluginVersions.springBoot
 }
@@ -9,8 +10,6 @@ aurora {
         auroraStarters = false
     }
 }
-
-val implementation by configurations
 
 dependencies {
     implementation(project(":aurora-spring-boot-webflux-starter"))

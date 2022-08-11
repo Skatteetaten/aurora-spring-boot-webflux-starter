@@ -1,10 +1,10 @@
 object Versions {
-    const val auroraBaseStarter = "1.3.12"
+    const val auroraBaseStarter = "1.4.1"
 
-    const val kotlin = "1.6.21"
-    const val kotlinCoroutines = "1.6.2"
-    const val kotlinLogging = "2.1.21"
-    const val springCloud = "2021.0.2"
+    const val kotlin = "1.7.10"
+    const val kotlinCoroutines = "1.6.4"
+    const val kotlinLogging = "2.1.23"
+    const val springCloud = "2021.0.3"
 
     const val assertk = "0.25"
     const val mockwebserver = "3.14.9"
@@ -13,6 +13,6 @@ object Versions {
 }
 
 object PluginVersions {
-    const val aurora = "4.4.23"
-    const val springBoot = "2.6.8"
+    const val aurora = "4.5.3"
+    const val springBoot = "2.7.2"
 }
