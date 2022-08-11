@@ -5,7 +5,7 @@ Alle viktige endringer i dette prosjektet vil bli dokumentert i denne filen.
 Formatet i denne filen er basert på [Keep a Changelog](http://keepachangelog.com/)
 og prosjektet følger [Semantic Versioning](http://semver.org/).
 
-## [1.4.15] - 2022-08-
+## [1.4.15] - 2022-08-11
 - Oppdatert til spring boot 2.7.2
 - Oppdatert til aurora-gradle-plugin 4.5.1
 - Fikset feil som gjorde at kotlin stdlib kom med selv i java prosjekter
