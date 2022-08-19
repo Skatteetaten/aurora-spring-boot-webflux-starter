@@ -53,6 +53,16 @@ The headers set are based on these values:
 - `Meldingsid` will always generate a new ID.
 - `Klientid` set from the environment variable AURORA_KLIENTID or uses application name with version as fallback (using the `spring.application.name` property and `APP_VERSION` env). The `User-Agent` header will also be set to the same value.
 
+## Using WebClient with mvc-starter
+
+It is possible to use WebClient (from the webflux-starter) even if the project is based on the mvc-starter.
+You can do this by adding both starters to the classpath, the webflux-starter will check if the auto configuration from the mvc-starter is on the classpath.
+If it is, it will only enable the WebClient customizer. All other beans are not initialized, and should therefore not create a conflict with the mvc-starter.
+Remember that the webclient property must be enabled for the customizer to be included:
+```properties
+aurora.webflux.header.webclient.interceptor.enabled = true
+```
+
 ## Project structure
 
 * *aurora-spring-boot-webflux-starter*, the starter code 
