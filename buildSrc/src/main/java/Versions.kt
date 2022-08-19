@@ -7,7 +7,7 @@ object Versions {
     const val springCloud = "2021.0.3"
 
     const val assertk = "0.25"
-    const val mockwebserver = "3.14.9"
+    const val mockwebserver = "4.9.3"
     const val awaitility = "4.2.0"
     const val junitPioneer = "1.7.1"
 }

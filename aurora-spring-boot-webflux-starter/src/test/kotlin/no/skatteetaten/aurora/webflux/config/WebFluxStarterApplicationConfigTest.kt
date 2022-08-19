@@ -2,20 +2,40 @@ package no.skatteetaten.aurora.webflux.config
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import assertk.assertions.isTrue
 import no.skatteetaten.aurora.webflux.AuroraRequestParser
+import no.skatteetaten.aurora.webflux.AuroraSpanHandler
 import no.skatteetaten.aurora.webflux.TestConfig
 import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig.HEADER_ORGID
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.web.reactive.function.client.WebClientCustomizer
 import org.springframework.cloud.sleuth.zipkin2.ZipkinWebClientBuilderProvider
 import org.springframework.http.HttpHeaders
 
 
 class WebFluxStarterApplicationConfigTest {
+
+    @SpringBootTest(classes = [WebFluxStarterApplicationConfig::class, AuroraWebClientConfig::class])
+    @Nested
+    inner class WebClientConfig {
+
+        @Autowired(required = false)
+        private var webClientCustomizer: WebClientCustomizer? = null
+
+        @Autowired(required = false)
+        private var auroraSpanHandler: AuroraSpanHandler? = null
+
+        @Test
+        fun `Load webclient customizer and span handler`() {
+            assertThat(webClientCustomizer).isNotNull()
+            assertThat(auroraSpanHandler).isNotNull()
+        }
+    }
 
     @SpringBootTest(
         classes = [WebFluxStarterApplicationConfig::class],
@@ -48,7 +68,7 @@ class WebFluxStarterApplicationConfigTest {
     }
 
     @SpringBootTest(
-        classes = [WebFluxStarterApplicationConfig::class, TestConfig::class],
+        classes = [WebFluxStarterApplicationConfig::class, AuroraWebClientConfig::class, TestConfig::class],
         properties = ["trace.auth.username=test123", "trace.auth.password=test234", "aurora.klientid=affiliation/app/1.2.3"]
     )
     @Nested

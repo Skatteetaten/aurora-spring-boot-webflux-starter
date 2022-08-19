@@ -18,6 +18,7 @@ import assertk.assertions.isNotNull
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGSID_FIELD
+import no.skatteetaten.aurora.webflux.config.AuroraWebClientConfig
 import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -37,7 +38,7 @@ open class TestConfig {
 }
 
 @SpringBootTest(
-    classes = [WebFluxStarterApplicationConfig::class, TestConfig::class],
+    classes = [WebFluxStarterApplicationConfig::class, AuroraWebClientConfig::class, TestConfig::class],
     properties = ["aurora.webflux.header.webclient.interceptor.enabled=true"]
 )
 open class AbstractAuroraHeaderWebFilterTest {
