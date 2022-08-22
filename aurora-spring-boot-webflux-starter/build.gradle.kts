@@ -1,5 +1,6 @@
 plugins {
     `java-library`
+    kotlin("jvm") version Versions.kotlin
     id("no.skatteetaten.gradle.aurora") version PluginVersions.aurora
 }
 
@@ -23,7 +24,8 @@ dependencies {
     api("no.skatteetaten.aurora.springboot:aurora-spring-boot-base-starter:${Versions.auroraBaseStarter}")
     api("org.springframework.boot:spring-boot-configuration-processor")
 
-    testImplementation(kotlin("test"))
+    testImplementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin}")
+    testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:${Versions.assertk}")

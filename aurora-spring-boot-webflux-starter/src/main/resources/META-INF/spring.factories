@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig
+  no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig,\
+  no.skatteetaten.aurora.webflux.config.AuroraWebClientConfig

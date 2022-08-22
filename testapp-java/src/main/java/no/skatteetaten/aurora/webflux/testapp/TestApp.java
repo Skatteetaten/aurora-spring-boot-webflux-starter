@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @SpringBootApplication
 public class TestApp {
 
-    private TestApp() {
+    public TestApp() {
     }
 
     public static void main(String[] args) {
