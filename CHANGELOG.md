@@ -5,6 +5,9 @@ Alle viktige endringer i dette prosjektet vil bli dokumentert i denne filen.
 Formatet i denne filen er basert på [Keep a Changelog](http://keepachangelog.com/)
 og prosjektet følger [Semantic Versioning](http://semver.org/).
 
+## [1.5.2] - 2022-09-20
+- Oppdatert aurora-gradle-plugin og base-starter versjon
+
 ## [1.5.1] - 2022-08-22
 - Støtter å bruke WebClient (AuroraWebClientCustomizer) når mvc-starter er på classpath
 
