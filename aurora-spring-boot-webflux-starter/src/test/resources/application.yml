@@ -23,10 +23,5 @@ management:
     server:
         port: -1
 
-trace:
-    auth:
-        username: test1
-        password: test2
-
 logging.level.zipkin2.reporter: ERROR
 logging.level.no.skatteetaten.aurora.webflux: DEBUG
