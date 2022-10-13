@@ -5,6 +5,9 @@ Alle viktige endringer i dette prosjektet vil bli dokumentert i denne filen.
 Formatet i denne filen er basert på [Keep a Changelog](http://keepachangelog.com/)
 og prosjektet følger [Semantic Versioning](http://semver.org/).
 
+## [1.5.3] - 2022-10-13
+- Feilhåndtering på webclient sender, for å unngå stack traces når vi ikke får sendt trace data
+
 ## [1.5.2] - 2022-09-20
 - Oppdatert aurora-gradle-plugin og base-starter versjon
 
