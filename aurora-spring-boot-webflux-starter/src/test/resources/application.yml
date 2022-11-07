@@ -1,7 +1,15 @@
 spring:
     application:
         name: webflux-starter
-
+    sleuth:
+        otel:
+            log:
+                slf4j:
+                    enabled: true
+        baggage:
+            correlation-fields: Korrelasjonsid,Klientid
+            local-fields: Korrelasjonsid,Klientid
+            remote-fields: Korrelasjonsid,Klientid
 aurora:
     webflux:
         header:

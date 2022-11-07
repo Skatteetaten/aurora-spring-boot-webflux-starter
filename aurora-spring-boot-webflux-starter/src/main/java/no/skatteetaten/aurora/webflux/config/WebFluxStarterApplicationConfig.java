@@ -3,15 +3,15 @@ package no.skatteetaten.aurora.webflux.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.cloud.sleuth.Tracer;
+import org.springframework.cloud.sleuth.http.HttpRequestParser;
 import org.springframework.cloud.sleuth.instrument.web.HttpServerRequestParser;
-import org.springframework.cloud.sleuth.zipkin2.ZipkinWebClientBuilderProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.reactive.function.client.WebClient;
 
-import brave.http.HttpRequestParser;
+import io.opentelemetry.sdk.trace.SpanProcessor;
 import no.skatteetaten.aurora.webflux.AuroraRequestParser;
-import no.skatteetaten.aurora.webflux.AuroraSpanHandler;
+import no.skatteetaten.aurora.webflux.AuroraSpanProcessor;
 
 @ConditionalOnMissingClass("no.skatteetaten.aurora.mvc.config.MvcStarterApplicationConfig")
 @Configuration
@@ -21,21 +21,22 @@ public class WebFluxStarterApplicationConfig {
 
     @Bean(HttpServerRequestParser.NAME)
     @ConditionalOnProperty(prefix = "aurora.webflux.header.filter", name = "enabled", matchIfMissing = true)
-    public HttpRequestParser sleuthHttpServerRequestParser() {
-        return new AuroraRequestParser();
+    public HttpRequestParser sleuthHttpServerRequestParser(Tracer tracer) {
+        return new AuroraRequestParser(tracer);
     }
 
     @Bean
-    public AuroraSpanHandler auroraSpanHandler(
+    public SpanProcessor auroraSpanHandler(
         @Value("${openshift.cluster:}") String cluster,
         @Value("${pod.name:}") String podName,
         @Value("${aurora.klientid:}") String klientid,
         // Using namespace to set environment to match what is implemented in splunk
         @Value("${pod.namespace:}") String environment
     ) {
-        return new AuroraSpanHandler(cluster, podName, klientid, environment);
+        return new AuroraSpanProcessor(cluster, podName, klientid, environment);
     }
 
+    /*
     @Bean
     @ConditionalOnProperty(prefix = "trace.auth", name = { "username", "password" })
     public ZipkinWebClientBuilderProvider zipkinWebClientBuilderProvider(
@@ -53,4 +54,5 @@ public class WebFluxStarterApplicationConfig {
             }
         });
     }
+     */
 }

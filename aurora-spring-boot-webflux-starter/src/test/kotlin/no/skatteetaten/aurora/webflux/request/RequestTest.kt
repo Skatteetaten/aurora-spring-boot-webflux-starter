@@ -5,7 +5,7 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isNotEmpty
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
-import brave.baggage.BaggageField
+import io.opentelemetry.api.baggage.Baggage
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGSID_FIELD
@@ -17,6 +17,9 @@ import org.slf4j.MDC
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
+import org.springframework.cloud.sleuth.Tracer
+import org.springframework.cloud.sleuth.autoconfig.otel.OtelAutoConfiguration
+import org.springframework.cloud.sleuth.otel.bridge.Slf4jBaggageApplicationListener
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.util.LinkedMultiValueMap
@@ -30,15 +33,16 @@ import java.util.UUID
 open class RequestTestMain
 
 @RestController
-open class RequestTestController {
+open class RequestTestController(private val tracer: Tracer) {
 
     @GetMapping("/test")
     fun getText() = mapOf(
         "mdc_Korrelasjonsid" to MDC.get(KORRELASJONSID_FIELD),
         "mdc_Klientid" to MDC.get(KLIENTID_FIELD),
         "mdc_Meldingsid" to MDC.get(MELDINGSID_FIELD),
-        "span" to BaggageField.getByName(KORRELASJONSID_FIELD).value
+        "span" to tracer.getBaggage(KORRELASJONSID_FIELD)?.get()
     ).also {
+        tracer.createBaggage("testing", "123")
         LoggerFactory.getLogger(RequestTestController::class.java).info("Clearing MDC, content: $it")
         MDC.clear()
     }
@@ -48,7 +52,7 @@ class RequestTest {
 
     @Nested
     @SpringBootTest(
-        classes = [RequestTestMain::class, WebFluxStarterApplicationConfig::class],
+        classes = [RequestTestMain::class, WebFluxStarterApplicationConfig::class, OtelAutoConfiguration::class],
         properties = [ "aurora.webflux.header.filter.enabled=true" ],
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
     )

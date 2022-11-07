@@ -5,12 +5,13 @@ import static no.skatteetaten.aurora.webflux.AuroraRequestParser.TRACE_TAG_PREFI
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import brave.handler.MutableSpan;
-import brave.handler.SpanHandler;
-import brave.propagation.TraceContext;
+import io.opentelemetry.context.Context;
+import io.opentelemetry.sdk.trace.ReadWriteSpan;
+import io.opentelemetry.sdk.trace.ReadableSpan;
+import io.opentelemetry.sdk.trace.SpanProcessor;
 
-public class AuroraSpanHandler extends SpanHandler {
-    private static final Logger logger = LoggerFactory.getLogger(AuroraSpanHandler.class);
+public class AuroraSpanProcessor implements SpanProcessor {
+    private static final Logger logger = LoggerFactory.getLogger(AuroraSpanProcessor.class);
 
     static final String TRACE_TAG_CLUSTER = TRACE_TAG_PREFIX + "cluster";
     static final String TRACE_TAG_POD = TRACE_TAG_PREFIX + "pod";
@@ -22,7 +23,7 @@ public class AuroraSpanHandler extends SpanHandler {
     private final String klientid;
     private final String environment;
 
-    public AuroraSpanHandler(String cluster, String podName, String klientid, String environment) {
+    public AuroraSpanProcessor(String cluster, String podName, String klientid, String environment) {
         logger.debug("Starting the Aurora span handler");
         this.cluster = cluster;
         this.podName = podName;
@@ -31,27 +32,40 @@ public class AuroraSpanHandler extends SpanHandler {
     }
 
     @Override
-    public boolean end(TraceContext context, MutableSpan span, Cause cause) {
+    public void onStart(Context parentContext, ReadWriteSpan span) {
         if (hasValue(cluster)) {
-            span.tag(TRACE_TAG_CLUSTER, cluster);
+            span.setAttribute(TRACE_TAG_CLUSTER, cluster);
         }
 
         if (hasValue(podName)) {
-            span.tag(TRACE_TAG_POD, podName);
+            span.setAttribute(TRACE_TAG_POD, podName);
         }
 
         if (hasValue(klientid)) {
-            span.tag(TRACE_TAG_AURORA_KLIENTID, klientid);
+            span.setAttribute(TRACE_TAG_AURORA_KLIENTID, klientid);
         }
 
         if (hasValue(environment)) {
-            span.tag(TRACE_TAG_ENVIRONMENT, environment);
+            span.setAttribute(TRACE_TAG_ENVIRONMENT, environment);
         }
-
-        return super.end(context, span, cause);
     }
 
     private boolean hasValue(String s) {
         return (s != null && !s.isEmpty());
     }
+
+    @Override
+    public boolean isStartRequired() {
+        return true;
+    }
+
+    @Override
+    public void onEnd(ReadableSpan span) {
+    }
+
+    @Override
+    public boolean isEndRequired() {
+        return true;
+    }
+
 }

@@ -13,7 +13,7 @@ import org.springframework.boot.web.reactive.function.client.WebClientCustomizer
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import brave.baggage.BaggageField;
+import io.opentelemetry.api.baggage.Baggage;
 
 public class AuroraWebClientCustomizer implements WebClientCustomizer {
     private final String name;
@@ -36,12 +36,11 @@ public class AuroraWebClientCustomizer implements WebClientCustomizer {
     }
 
     protected String addCorrelationId() {
-        return Optional.ofNullable(getBaggageField())
-            .map(BaggageField::getValue)
-            .orElseGet(() -> UUID.randomUUID().toString());
-    }
-
-    BaggageField getBaggageField() {
-        return BaggageField.getByName(KORRELASJONSID_FIELD);
+        String korrId = Baggage.current().getEntryValue(KORRELASJONSID_FIELD);
+        if(korrId == null) {
+            return UUID.randomUUID().toString();
+        } else {
+            return korrId;
+        }
     }
 }

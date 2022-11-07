@@ -22,6 +22,8 @@ import no.skatteetaten.aurora.webflux.config.AuroraWebClientConfig
 import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import org.springframework.cloud.sleuth.autoconfig.instrument.reactor.TraceReactorAutoConfiguration
+import org.springframework.cloud.sleuth.autoconfig.otel.OtelAutoConfiguration
 import org.springframework.http.HttpHeaders
 
 @TestConfiguration
@@ -38,7 +40,7 @@ open class TestConfig {
 }
 
 @SpringBootTest(
-    classes = [WebFluxStarterApplicationConfig::class, AuroraWebClientConfig::class, TestConfig::class],
+    classes = [WebFluxStarterApplicationConfig::class, AuroraWebClientConfig::class, TestConfig::class, OtelAutoConfiguration::class],
     properties = ["aurora.webflux.header.webclient.interceptor.enabled=true"]
 )
 open class AbstractAuroraHeaderWebFilterTest {
