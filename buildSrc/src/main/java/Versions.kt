@@ -1,5 +1,5 @@
 object Versions {
-    const val auroraBaseStarter = "feature_AOS_7215-SNAPSHOT"
+    const val auroraBaseStarter = "1.5.0"
 
     const val kotlin = "1.7.20"
     const val kotlinCoroutines = "1.6.4"
