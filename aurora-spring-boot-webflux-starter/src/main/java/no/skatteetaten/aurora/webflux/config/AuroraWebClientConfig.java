@@ -43,7 +43,7 @@ public class AuroraWebClientConfig {
         ZipkinProperties zipkin,
         @Autowired(required = false) ZipkinWebClientBuilderProvider provider
     ) {
-        if(provider == null) {
+        if (provider == null) {
             provider = WebClient::builder;
         }
 
