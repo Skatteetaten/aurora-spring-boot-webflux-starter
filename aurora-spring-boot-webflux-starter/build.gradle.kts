@@ -24,7 +24,6 @@ dependencies {
     api(platform("org.springframework.cloud:spring-cloud-dependencies:${Versions.springCloud}"))
     api("org.springframework.cloud:spring-cloud-starter-sleuth")
     api("org.springframework.cloud:spring-cloud-sleuth-zipkin")
-    api("org.springframework.boot:spring-boot-starter-actuator")
 
     // strict versions to avoid conflicts
     api("io.zipkin.brave:brave") {
