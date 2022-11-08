@@ -26,7 +26,9 @@ dependencies {
     api("org.springframework.cloud:spring-cloud-sleuth-zipkin")
 
     // strict versions to avoid conflicts
-    api("io.zipkin.brave:brave:${Versions.brave}!!")
+    api("io.zipkin.brave:brave") {
+        version { strictly(Versions.brave) }
+    }
 
     api("org.springframework.boot:spring-boot-starter-webflux")
     api("no.skatteetaten.aurora.springboot:aurora-spring-boot-base-starter:${Versions.auroraBaseStarter}")
