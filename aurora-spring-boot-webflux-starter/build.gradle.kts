@@ -14,11 +14,21 @@ aurora {
     features {
         auroraStarters = false
     }
+
+    versions {
+        javaSourceCompatibility = "1.8"
+    }
 }
 
 dependencies {
     api(platform("org.springframework.cloud:spring-cloud-dependencies:${Versions.springCloud}"))
     api("org.springframework.cloud:spring-cloud-starter-sleuth")
+    api("org.springframework.cloud:spring-cloud-sleuth-zipkin")
+
+    // strict versions to avoid conflicts
+    api("io.zipkin.brave:brave") {
+        version { strictly(Versions.brave) }
+    }
 
     api("org.springframework.boot:spring-boot-starter-webflux")
     api("no.skatteetaten.aurora.springboot:aurora-spring-boot-base-starter:${Versions.auroraBaseStarter}")
