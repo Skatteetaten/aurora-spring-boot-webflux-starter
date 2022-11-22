@@ -13,6 +13,8 @@ import org.springframework.cloud.sleuth.zipkin2.ZipkinProperties;
 import org.springframework.cloud.sleuth.zipkin2.ZipkinWebClientBuilderProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import no.skatteetaten.aurora.webflux.AuroraSpanHandler;
@@ -26,6 +28,7 @@ public class AuroraWebClientConfig {
     private static final Logger logger = LoggerFactory.getLogger(AuroraSpanHandler.class);
 
     @Bean
+    @Order(Ordered.HIGHEST_PRECEDENCE)
     @ConditionalOnProperty(prefix = "aurora.webflux.header.webclient.interceptor", name = "enabled")
     public WebClientCustomizer webClientCustomizer(
         @Value("${spring.application.name:}") String appName,
