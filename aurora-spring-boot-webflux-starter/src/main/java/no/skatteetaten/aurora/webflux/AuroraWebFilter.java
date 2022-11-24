@@ -33,26 +33,29 @@ public class AuroraWebFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        HttpHeaders headers = exchange.getRequest().getHeaders();
         Span span = tracer.currentSpan();
+        if(span != null) {
+            HttpHeaders headers = exchange.getRequest().getHeaders();
 
-        String meldingsid = headers.getFirst(MELDINGSID_FIELD);
-        if (meldingsid != null) {
-            tracer.createBaggage(MELDINGSID_FIELD, meldingsid);
+            String meldingsid = headers.getFirst(MELDINGSID_FIELD);
+            if (meldingsid != null) {
+                tracer.createBaggage(MELDINGSID_FIELD, meldingsid);
+            }
+
+            String klientid = headers.getFirst(KLIENTID_FIELD);
+            if (klientid != null) {
+                tracer.createBaggage(KLIENTID_FIELD, klientid);
+                span.tag(TRACE_TAG_KLIENT_ID, klientid);
+            }
+
+            String korrelasjonsid = Optional.ofNullable(headers.getFirst(KORRELASJONSID_FIELD))
+                .orElse(UUID.randomUUID().toString());
+            tracer.createBaggage(KORRELASJONSID_FIELD, korrelasjonsid);
+            span.tag(TRACE_TAG_KORRELASJONS_ID, korrelasjonsid);
+
+            logger.debug("All baggage: {}", tracer.getAllBaggage());
         }
 
-        String klientid = headers.getFirst(KLIENTID_FIELD);
-        if (klientid != null) {
-            tracer.createBaggage(KLIENTID_FIELD, klientid);
-            span.tag(TRACE_TAG_KLIENT_ID, klientid);
-        }
-
-        String korrelasjonsid = Optional.ofNullable(headers.getFirst(KORRELASJONSID_FIELD))
-            .orElse(UUID.randomUUID().toString());
-        tracer.createBaggage(KORRELASJONSID_FIELD, korrelasjonsid);
-        span.tag(TRACE_TAG_KORRELASJONS_ID, korrelasjonsid);
-
-        logger.debug("All baggage: {}", tracer.getAllBaggage());
         return chain.filter(exchange);
     }
 }
