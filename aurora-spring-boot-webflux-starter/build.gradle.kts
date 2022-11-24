@@ -14,6 +14,10 @@ aurora {
     features {
         auroraStarters = false
     }
+
+    versions {
+        javaSourceCompatibility = "1.8"
+    }
 }
 
 dependencies {
