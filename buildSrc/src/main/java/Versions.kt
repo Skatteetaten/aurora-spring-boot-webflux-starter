@@ -5,6 +5,7 @@ object Versions {
     const val kotlinCoroutines = "1.6.4"
     const val kotlinLogging = "3.0.4"
     const val springCloud = "2021.0.5"
+    const val springOtel = "1.1.0"
     const val brave = "5.13.9"
 
     const val assertk = "0.25"
