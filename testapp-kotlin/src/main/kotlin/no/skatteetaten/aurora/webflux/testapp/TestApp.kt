@@ -1,11 +1,11 @@
 package no.skatteetaten.aurora.webflux.testapp
 
-import brave.baggage.BaggageField
+import io.opentelemetry.api.baggage.Baggage
 import kotlinx.coroutines.reactive.awaitSingle
 import mu.KotlinLogging
-import no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD
-import no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD
-import no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGSID_FIELD
+import no.skatteetaten.aurora.webflux.AuroraWebFilter.KLIENTID_FIELD
+import no.skatteetaten.aurora.webflux.AuroraWebFilter.KORRELASJONSID_FIELD
+import no.skatteetaten.aurora.webflux.AuroraWebFilter.MELDINGSID_FIELD
 import org.slf4j.MDC
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -42,9 +42,9 @@ class TestController(private val webClient: WebClient) {
 
     @GetMapping
     fun get(): Mono<Map<String, Any>> {
-        val korrelasjonsid = BaggageField.getByName(KORRELASJONSID_FIELD)
+        val korrelasjonsid = Baggage.current().getEntryValue(KORRELASJONSID_FIELD)
         checkNotNull(korrelasjonsid)
-        check(korrelasjonsid.value == MDC.get(KORRELASJONSID_FIELD))
+        check(korrelasjonsid == MDC.get(KORRELASJONSID_FIELD))
 
         logger.info("Get request")
         return webClient.get().uri("/headers").retrieve().bodyToMono<Map<String, String>>().map {

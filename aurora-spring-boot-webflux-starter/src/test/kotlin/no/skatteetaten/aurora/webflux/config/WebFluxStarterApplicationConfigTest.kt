@@ -3,8 +3,8 @@ package no.skatteetaten.aurora.webflux.config
 import assertk.assertThat
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
-import no.skatteetaten.aurora.webflux.AuroraRequestParser
 import no.skatteetaten.aurora.webflux.AuroraSpanProcessor
+import no.skatteetaten.aurora.webflux.AuroraWebFilter
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -39,11 +39,11 @@ class WebFluxStarterApplicationConfigTest {
     @Nested
     inner class HeaderFilter {
         @Autowired(required = false)
-        private var requestParser: AuroraRequestParser? = null
+        private var webFilter: AuroraWebFilter? = null
 
         @Test
         fun `Header filter disabled`() {
-            assertThat(requestParser).isNull()
+            assertThat(webFilter).isNull()
         }
     }
 }

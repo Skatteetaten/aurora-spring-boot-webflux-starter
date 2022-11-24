@@ -15,14 +15,13 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotEmpty
 import assertk.assertions.isNotNull
-import no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD
-import no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD
-import no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGSID_FIELD
+import no.skatteetaten.aurora.webflux.AuroraWebFilter.KLIENTID_FIELD
+import no.skatteetaten.aurora.webflux.AuroraWebFilter.KORRELASJONSID_FIELD
+import no.skatteetaten.aurora.webflux.AuroraWebFilter.MELDINGSID_FIELD
 import no.skatteetaten.aurora.webflux.config.AuroraWebClientConfig
 import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import org.springframework.cloud.sleuth.autoconfig.instrument.reactor.TraceReactorAutoConfiguration
 import org.springframework.cloud.sleuth.autoconfig.otel.OtelAutoConfiguration
 import org.springframework.http.HttpHeaders
 

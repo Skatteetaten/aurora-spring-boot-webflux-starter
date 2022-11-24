@@ -2,11 +2,10 @@ package no.skatteetaten.aurora.webflux;
 
 import static java.util.UUID.randomUUID;
 import static org.springframework.web.reactive.function.client.ClientRequest.from;
-import static no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD;
-import static no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD;
-import static no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGSID_FIELD;
+import static no.skatteetaten.aurora.webflux.AuroraWebFilter.KLIENTID_FIELD;
+import static no.skatteetaten.aurora.webflux.AuroraWebFilter.KORRELASJONSID_FIELD;
+import static no.skatteetaten.aurora.webflux.AuroraWebFilter.MELDINGSID_FIELD;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer;

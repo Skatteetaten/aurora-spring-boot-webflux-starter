@@ -25,8 +25,8 @@ public class AuroraWebClientConfig {
         @Value("${app.version:}") String appVersion,
         @Value("${aurora.klientid:}") String klientIdEnv
     ) {
-        String fallbackKlientId = appVersion.isBlank() ? appName : String.format("%s/%s", appName, appVersion);
-        String klientId = klientIdEnv.isBlank() ? fallbackKlientId : klientIdEnv;
+        String fallbackKlientId = appVersion.isEmpty() ? appName : String.format("%s/%s", appName, appVersion);
+        String klientId = klientIdEnv.isEmpty() ? fallbackKlientId : klientIdEnv;
         return new AuroraWebClientCustomizer(klientId);
     }
 }

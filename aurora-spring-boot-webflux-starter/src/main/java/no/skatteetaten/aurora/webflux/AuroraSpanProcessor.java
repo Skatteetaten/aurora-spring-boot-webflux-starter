@@ -1,6 +1,6 @@
 package no.skatteetaten.aurora.webflux;
 
-import static no.skatteetaten.aurora.webflux.AuroraRequestParser.TRACE_TAG_PREFIX;
+import static no.skatteetaten.aurora.webflux.AuroraWebFilter.TRACE_TAG_PREFIX;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

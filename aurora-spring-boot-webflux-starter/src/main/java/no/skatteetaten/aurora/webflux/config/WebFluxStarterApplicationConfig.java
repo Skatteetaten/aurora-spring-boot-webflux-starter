@@ -4,14 +4,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.sleuth.Tracer;
-import org.springframework.cloud.sleuth.http.HttpRequestParser;
-import org.springframework.cloud.sleuth.instrument.web.HttpServerRequestParser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import io.opentelemetry.sdk.trace.SpanProcessor;
-import no.skatteetaten.aurora.webflux.AuroraRequestParser;
 import no.skatteetaten.aurora.webflux.AuroraSpanProcessor;
+import no.skatteetaten.aurora.webflux.AuroraWebFilter;
 
 @ConditionalOnMissingClass("no.skatteetaten.aurora.mvc.config.MvcStarterApplicationConfig")
 @Configuration
@@ -19,10 +17,10 @@ public class WebFluxStarterApplicationConfig {
 
     public static final String HEADER_ORGID = "X-Scope-OrgID";
 
-    @Bean(HttpServerRequestParser.NAME)
+    @Bean
     @ConditionalOnProperty(prefix = "aurora.webflux.header.filter", name = "enabled", matchIfMissing = true)
-    public HttpRequestParser sleuthHttpServerRequestParser(Tracer tracer) {
-        return new AuroraRequestParser(tracer);
+    public AuroraWebFilter auroraWebFilter(Tracer tracer) {
+        return new AuroraWebFilter(tracer);
     }
 
     @Bean

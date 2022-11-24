@@ -5,10 +5,10 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isNotEmpty
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
-import io.opentelemetry.api.baggage.Baggage
-import no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD
-import no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD
-import no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGSID_FIELD
+import assertk.assertions.isNullOrEmpty
+import no.skatteetaten.aurora.webflux.AuroraWebFilter.KLIENTID_FIELD
+import no.skatteetaten.aurora.webflux.AuroraWebFilter.KORRELASJONSID_FIELD
+import no.skatteetaten.aurora.webflux.AuroraWebFilter.MELDINGSID_FIELD
 import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -19,7 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.cloud.sleuth.Tracer
 import org.springframework.cloud.sleuth.autoconfig.otel.OtelAutoConfiguration
-import org.springframework.cloud.sleuth.otel.bridge.Slf4jBaggageApplicationListener
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.util.LinkedMultiValueMap
@@ -42,7 +41,6 @@ open class RequestTestController(private val tracer: Tracer) {
         "mdc_Meldingsid" to MDC.get(MELDINGSID_FIELD),
         "span" to tracer.getBaggage(KORRELASJONSID_FIELD)?.get()
     ).also {
-        tracer.createBaggage("testing", "123")
         LoggerFactory.getLogger(RequestTestController::class.java).info("Clearing MDC, content: $it")
         MDC.clear()
     }
@@ -76,21 +74,21 @@ class RequestTest {
 
         @Test
         fun `Klientid from request is put on MDC`() {
-            val response = sendRequest(port, mapOf("Klientid" to "klient/1.2"))
+            val response = sendRequest(port, mapOf(KLIENTID_FIELD to "klient/1.2"))
             assertThat(response["mdc_Klientid"]).isEqualTo("klient/1.2")
         }
 
         @Test
         fun `Korrelasjonsid from request is put on MDC`() {
             val korrelasjonsId = UUID.randomUUID().toString()
-            val response = sendRequest(port, mapOf("Korrelasjonsid" to korrelasjonsId))
+            val response = sendRequest(port, mapOf(KORRELASJONSID_FIELD to korrelasjonsId))
             assertThat(response["mdc_Korrelasjonsid"]).isEqualTo(korrelasjonsId)
         }
 
         @Test
         fun `Meldingsid from request is put on MDC`() {
             val meldingsId = UUID.randomUUID().toString()
-            val response = sendRequest(port, mapOf("Meldingsid" to meldingsId))
+            val response = sendRequest(port, mapOf(MELDINGSID_FIELD to meldingsId))
             assertThat(response["mdc_Meldingsid"]).isEqualTo(meldingsId)
         }
     }
@@ -110,7 +108,7 @@ class RequestTest {
             val response = sendRequest(port)
 
             assertThat(response["mdc_Korrelasjonsid"]).isNull()
-            assertThat(response["span"]).isNull()
+            assertThat(response["span"]).isNullOrEmpty()
         }
     }
 

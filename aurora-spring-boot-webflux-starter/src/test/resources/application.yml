@@ -7,9 +7,9 @@ spring:
                 slf4j:
                     enabled: true
         baggage:
-            correlation-fields: Korrelasjonsid,Klientid
-            local-fields: Korrelasjonsid,Klientid
-            remote-fields: Korrelasjonsid,Klientid
+            correlation-fields: Korrelasjonsid,Klientid,Meldingsid
+            local-fields: Korrelasjonsid,Klientid,Meldingsid
+            remote-fields: Korrelasjonsid
 aurora:
     webflux:
         header:
