@@ -6,6 +6,8 @@ spring:
             log:
                 slf4j:
                     enabled: true
+            config:
+                trace-id-ratio-based: 1.0
         baggage:
             correlation-fields: Korrelasjonsid,Klientid,Meldingsid
             local-fields: Korrelasjonsid,Klientid,Meldingsid

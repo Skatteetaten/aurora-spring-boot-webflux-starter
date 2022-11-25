@@ -8,11 +8,11 @@ import no.skatteetaten.aurora.webflux.AuroraWebFilter.KLIENTID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraWebFilter.KORRELASJONSID_FIELD
 import no.skatteetaten.aurora.webflux.AuroraWebFilter.MELDINGSID_FIELD
 import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig
+import okhttp3.Protocol
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
@@ -41,12 +41,11 @@ open class AuroraRequestParserTestController {
     }
 }
 
-@Disabled("Update to otel")
 @SpringBootTest(
     classes = [AuroraRequestParserMain::class, WebFluxStarterApplicationConfig::class],
     properties = [
-        "spring.zipkin.enabled=true",
-        "aurora.webflux.header.filter.enabled=true"
+        "aurora.webflux.header.filter.enabled=true",
+        "spring.sleuth.otel.exporter.otlp.enabled=true"
     ],
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
@@ -58,7 +57,7 @@ class AuroraRequestParserTest {
 
     @BeforeEach
     fun setUp() {
-        server.start(9411)
+        server.start(4317)
     }
 
     @AfterEach
@@ -67,7 +66,8 @@ class AuroraRequestParserTest {
     }
 
     @Test
-    fun `Given request headers set same values on MDC and generate Korrelasjonsid fails if zipkin disabled`() {
+    fun `Given request headers set same values on MDC and generate Korrelasjonsid`() {
+        server.protocols = listOf(Protocol.H2_PRIOR_KNOWLEDGE)
         server.enqueue(MockResponse())
 
         val requestHeaders =

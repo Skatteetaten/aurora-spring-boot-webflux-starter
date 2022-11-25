@@ -1,0 +1,13 @@
+spring:
+    sleuth:
+        otel:
+            exporter:
+                otlp:
+                    endpoint: <otlp-url>
+                    enabled: true
+
+pod:
+    name: test-123
+
+openshift:
+    cluster: local

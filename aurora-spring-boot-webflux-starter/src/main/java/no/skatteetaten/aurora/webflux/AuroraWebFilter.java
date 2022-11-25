@@ -1,5 +1,7 @@
 package no.skatteetaten.aurora.webflux;
 
+import static org.springframework.cloud.sleuth.autoconfig.instrument.web.SleuthWebProperties.TRACING_FILTER_ORDER;
+
 import java.util.Optional;
 import java.util.UUID;
 
@@ -7,13 +9,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.sleuth.Span;
 import org.springframework.cloud.sleuth.Tracer;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
+import org.springframework.lang.NonNull;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 
 import reactor.core.publisher.Mono;
 
+@Order(TRACING_FILTER_ORDER + 5)
 public class AuroraWebFilter implements WebFilter {
     private static final Logger logger = LoggerFactory.getLogger(AuroraWebFilter.class);
 
@@ -32,9 +37,11 @@ public class AuroraWebFilter implements WebFilter {
     }
 
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+    @NonNull
+    @SuppressWarnings("resource")
+    public Mono<Void> filter(@NonNull ServerWebExchange exchange, @NonNull WebFilterChain chain) {
         Span span = tracer.currentSpan();
-        if(span != null) {
+        if (span != null) {
             HttpHeaders headers = exchange.getRequest().getHeaders();
 
             String meldingsid = headers.getFirst(MELDINGSID_FIELD);

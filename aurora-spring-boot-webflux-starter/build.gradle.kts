@@ -27,6 +27,7 @@ dependencies {
         exclude(group = "org.springframework.cloud", module = "spring-cloud-sleuth-brave")
     }
     api("org.springframework.cloud:spring-cloud-sleuth-otel-autoconfigure")
+    api("io.opentelemetry:opentelemetry-exporter-otlp")
 
     api("org.springframework.boot:spring-boot-starter-webflux")
     api("no.skatteetaten.aurora.springboot:aurora-spring-boot-base-starter:${Versions.auroraBaseStarter}")
