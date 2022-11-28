@@ -36,7 +36,7 @@ public class AuroraWebClientCustomizer implements WebClientCustomizer {
 
     protected String addCorrelationId() {
         String korrId = Baggage.current().getEntryValue(KORRELASJONSID_FIELD);
-        if(korrId == null) {
+        if (korrId == null) {
             return UUID.randomUUID().toString();
         } else {
             return korrId;
