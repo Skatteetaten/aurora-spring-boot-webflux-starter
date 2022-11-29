@@ -42,6 +42,7 @@ public class AuroraWebFilter implements WebFilter {
     public Mono<Void> filter(@NonNull ServerWebExchange exchange, @NonNull WebFilterChain chain) {
         Span span = tracer.currentSpan();
         if (span != null) {
+            logger.debug("Request: {} {}, SpanId: {}", exchange.getRequest().getMethod(), exchange.getRequest().getPath(), span.context().spanId());
             HttpHeaders headers = exchange.getRequest().getHeaders();
 
             String meldingsid = headers.getFirst(MELDINGSID_FIELD);
