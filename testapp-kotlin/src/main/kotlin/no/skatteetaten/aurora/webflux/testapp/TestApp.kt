@@ -20,8 +20,6 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 import reactor.core.publisher.Mono
 
-// Default profile disables zipkin integration, to enable zipkin start with the zipkin profile
-// run docker-compose to start local zipkin
 @SpringBootApplication
 class TestMain
 
