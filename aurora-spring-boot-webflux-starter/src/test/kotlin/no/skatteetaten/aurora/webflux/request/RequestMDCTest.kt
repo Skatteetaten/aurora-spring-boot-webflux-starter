@@ -3,7 +3,6 @@ package no.skatteetaten.aurora.webflux.request
 import assertk.assertThat
 import assertk.assertions.isNotNull
 import com.fasterxml.jackson.databind.JsonNode
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.slf4j.MDC
 import org.springframework.boot.test.context.SpringBootTest
@@ -19,7 +18,6 @@ class TestMdcController {
     fun getMdc(): Map<String, String> = MDC.getCopyOfContextMap()
 }
 
-@Disabled("Not sure why this is failing with gradle")
 @SpringBootTest(classes = [RequestTestMain::class, TestMdcController::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class RequestMDCTest {
 

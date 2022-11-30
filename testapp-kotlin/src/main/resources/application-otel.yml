@@ -11,3 +11,6 @@ pod:
 
 openshift:
     cluster: local
+
+aurora:
+    klientid: aup/test-app/1.2.3
