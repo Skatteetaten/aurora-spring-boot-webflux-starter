@@ -1,113 +1,86 @@
 package no.skatteetaten.aurora.webflux
 
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.boot.web.reactive.function.client.WebClientCustomizer
-import org.springframework.context.annotation.Bean
-import org.springframework.test.context.TestPropertySource
-import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.client.bodyToMono
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotEmpty
 import assertk.assertions.isNotNull
-import no.skatteetaten.aurora.webflux.AuroraWebFilter.KLIENTID_FIELD
-import no.skatteetaten.aurora.webflux.AuroraWebFilter.KORRELASJONSID_FIELD
-import no.skatteetaten.aurora.webflux.AuroraWebFilter.MELDINGSID_FIELD
-import no.skatteetaten.aurora.webflux.config.AuroraWebClientConfig
+import no.skatteetaten.aurora.webflux.AuroraConstants.HEADER_KLIENTID
+import no.skatteetaten.aurora.webflux.AuroraConstants.HEADER_KORRELASJONSID
+import no.skatteetaten.aurora.webflux.AuroraConstants.HEADER_MELDINGSID
 import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig
+import okhttp3.Protocol
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import org.springframework.cloud.sleuth.autoconfig.otel.OtelAutoConfiguration
-import org.springframework.http.HttpHeaders
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.slf4j.LoggerFactory
+import org.slf4j.MDC
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.server.LocalServerPort
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.bodyToMono
 
-@TestConfiguration
-open class TestConfig {
-    @Bean
-    open fun webClientBuilder(customizer: WebClientCustomizer) = customizer.let {
-        val builder = WebClient.builder()
-        it.customize(builder)
-        builder
+@SpringBootApplication
+open class AuroraHeaderWebFilterMain
+
+@RestController
+open class AuroraHeaderWebFilterTestController {
+
+    @GetMapping("/mdc")
+    fun getMdcValues() = mapOf(
+        HEADER_KORRELASJONSID to MDC.get(HEADER_KORRELASJONSID),
+        HEADER_MELDINGSID to MDC.get(HEADER_MELDINGSID),
+        HEADER_KLIENTID to MDC.get(HEADER_KLIENTID)
+    ).also {
+        LoggerFactory.getLogger(AuroraHeaderWebFilterTestController::class.java).info("MDC content: $it")
+        MDC.clear()
     }
-
-    @Bean
-    open fun webClient(builder: WebClient.Builder) = builder.build()
 }
 
 @SpringBootTest(
-    classes = [WebFluxStarterApplicationConfig::class, AuroraWebClientConfig::class, TestConfig::class, OtelAutoConfiguration::class],
-    properties = ["aurora.webflux.header.webclient.interceptor.enabled=true"]
+    classes = [AuroraHeaderWebFilterMain::class, WebFluxStarterApplicationConfig::class],
+    properties = [
+        "aurora.webflux.header.filter.enabled=true",
+        "spring.sleuth.otel.exporter.otlp.enabled=true"
+    ],
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
-open class AbstractAuroraHeaderWebFilterTest {
+class AuroraHeaderWebFilterTest {
+    @LocalServerPort
+    private var port: Int = 0
 
-    @Autowired
-    lateinit var webClient: WebClient
-
-    val server = MockWebServer()
+    private val server = MockWebServer()
 
     @BeforeEach
     fun setUp() {
-        server.start()
+        server.start(4317)
     }
 
     @AfterEach
     fun tearDown() {
-        kotlin.runCatching {
-            server.shutdown()
-        }
+        server.shutdown()
     }
-}
-
-class AuroraHeaderWebFilterDefaultTest : AbstractAuroraHeaderWebFilterTest() {
-    @Test
-    fun `Set Aurora headers on request`() {
-        server.enqueue(MockResponse().setBody("test"))
-
-        webClient.get().uri(server.url("/").toString()).retrieve().bodyToMono<String>().block()
-
-        val request = server.takeRequest()
-
-        val headers = request.headers
-        assertThat(headers[KORRELASJONSID_FIELD]).isNotNull().isNotEmpty()
-        assertThat(headers[MELDINGSID_FIELD]).isNotNull().isNotEmpty()
-        assertThat(headers[HttpHeaders.USER_AGENT]).isEqualTo("webflux-starter")
-        assertThat(headers[KLIENTID_FIELD]).isEqualTo("webflux-starter")
-    }
-}
-
-@TestPropertySource(properties = ["aurora.klientid=segment/webflux-starter/1.0.0"])
-class AuroraHeaderWebFilterKlientIdEnvTest : AbstractAuroraHeaderWebFilterTest() {
 
     @Test
-    fun `Set KlientID from env`() {
-        server.enqueue(MockResponse().setBody("test"))
+    fun `Given request headers set same values on MDC and generate Korrelasjonsid`() {
+        server.protocols = listOf(Protocol.H2_PRIOR_KNOWLEDGE)
+        server.enqueue(MockResponse())
 
-        webClient.get().uri(server.url("/").toString()).retrieve().bodyToMono<String>().block()
+        val requestHeaders =
+            WebClient.create("http://localhost:$port/mdc")
+                .get()
+                .header(HEADER_MELDINGSID, "meldingsid")
+                .header(HEADER_KLIENTID, "klientid")
+                .retrieve()
+                .bodyToMono<Map<String, String>>()
+                .block()!!
 
-        val request = server.takeRequest()
-
-        val headers = request.headers
-        assertThat(headers[KLIENTID_FIELD]).isNotNull().isEqualTo("segment/webflux-starter/1.0.0")
-        assertThat(headers[HttpHeaders.USER_AGENT]).isNotNull().isEqualTo("segment/webflux-starter/1.0.0")
-    }
-}
-@TestPropertySource(properties = ["app.version=1.0.0"])
-class AuroraHeaderWebFilterVersionEnvTest : AbstractAuroraHeaderWebFilterTest() {
-
-    @Test
-    fun `Set fallback klientID`() {
-        server.enqueue(MockResponse().setBody("test"))
-
-        webClient.get().uri(server.url("/").toString()).retrieve().bodyToMono<String>().block()
-
-        val request = server.takeRequest()
-
-        val headers = request.headers
-        assertThat(headers[KLIENTID_FIELD]).isNotNull().isEqualTo("webflux-starter/1.0.0")
-        assertThat(headers[HttpHeaders.USER_AGENT]).isNotNull().isEqualTo("webflux-starter/1.0.0")
+        assertThat(requestHeaders[HEADER_KORRELASJONSID]).isNotNull().isNotEmpty()
+        assertThat(requestHeaders[HEADER_MELDINGSID]).isEqualTo("meldingsid")
+        assertThat(requestHeaders[HEADER_KLIENTID]).isEqualTo("klientid")
     }
 }

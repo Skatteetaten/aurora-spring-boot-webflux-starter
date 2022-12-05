@@ -3,9 +3,9 @@ package no.skatteetaten.aurora.webflux.testapp
 import io.opentelemetry.api.baggage.Baggage
 import kotlinx.coroutines.reactive.awaitSingle
 import mu.KotlinLogging
-import no.skatteetaten.aurora.webflux.AuroraWebFilter.KLIENTID_FIELD
-import no.skatteetaten.aurora.webflux.AuroraWebFilter.KORRELASJONSID_FIELD
-import no.skatteetaten.aurora.webflux.AuroraWebFilter.MELDINGSID_FIELD
+import no.skatteetaten.aurora.webflux.AuroraConstants.HEADER_KLIENTID
+import no.skatteetaten.aurora.webflux.AuroraConstants.HEADER_KORRELASJONSID
+import no.skatteetaten.aurora.webflux.AuroraConstants.HEADER_MELDINGSID
 import org.slf4j.MDC
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -40,9 +40,9 @@ class TestController(private val webClient: WebClient) {
 
     @GetMapping
     fun get(): Mono<Map<String, Any>> {
-        val korrelasjonsid = Baggage.current().getEntryValue(KORRELASJONSID_FIELD)
+        val korrelasjonsid = Baggage.current().getEntryValue(HEADER_KORRELASJONSID)
         checkNotNull(korrelasjonsid)
-        check(korrelasjonsid == MDC.get(KORRELASJONSID_FIELD))
+        check(korrelasjonsid == MDC.get(HEADER_KORRELASJONSID))
 
         logger.info("Get request")
         return webClient.get().uri("/headers").retrieve().bodyToMono<Map<String, String>>().map {
@@ -60,13 +60,13 @@ class TestController(private val webClient: WebClient) {
 
     @GetMapping("/headers")
     fun getHeaders(@RequestHeader headers: HttpHeaders): Map<String, String> {
-        checkNotNull(headers[KORRELASJONSID_FIELD])
-        checkNotNull(headers[MELDINGSID_FIELD])
-        checkNotNull(headers[KLIENTID_FIELD])
+        checkNotNull(headers[HEADER_KORRELASJONSID])
+        checkNotNull(headers[HEADER_MELDINGSID])
+        checkNotNull(headers[HEADER_KLIENTID])
         checkNotNull(headers[USER_AGENT])
         logger.info("MDC: ${MDC.get("Korrelasjonsid")}")
         return headers.toSingleValueMap().toMutableMap().apply {
-            put("MDC-$KORRELASJONSID_FIELD", MDC.get("Korrelasjonsid"))
+            put("MDC-$HEADER_KORRELASJONSID", MDC.get("Korrelasjonsid"))
         }
     }
 }

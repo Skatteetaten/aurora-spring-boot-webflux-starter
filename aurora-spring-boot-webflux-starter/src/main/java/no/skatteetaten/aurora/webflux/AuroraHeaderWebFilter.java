@@ -1,6 +1,11 @@
 package no.skatteetaten.aurora.webflux;
 
 import static org.springframework.cloud.sleuth.autoconfig.instrument.web.SleuthWebProperties.TRACING_FILTER_ORDER;
+import static no.skatteetaten.aurora.webflux.AuroraConstants.HEADER_KLIENTID;
+import static no.skatteetaten.aurora.webflux.AuroraConstants.HEADER_KORRELASJONSID;
+import static no.skatteetaten.aurora.webflux.AuroraConstants.HEADER_MELDINGSID;
+import static no.skatteetaten.aurora.webflux.AuroraConstants.TRACE_TAG_KLIENT_ID;
+import static no.skatteetaten.aurora.webflux.AuroraConstants.TRACE_TAG_KORRELASJONS_ID;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -19,20 +24,12 @@ import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
 @Order(TRACING_FILTER_ORDER + 5)
-public class AuroraWebFilter implements WebFilter {
-    private static final Logger logger = LoggerFactory.getLogger(AuroraWebFilter.class);
-
-    public static final String KORRELASJONSID_FIELD = "Korrelasjonsid";
-    public static final String MELDINGSID_FIELD = "Meldingsid";
-    public static final String KLIENTID_FIELD = "Klientid";
-
-    static final String TRACE_TAG_PREFIX = "skatteetaten.";
-    static final String TRACE_TAG_KORRELASJONS_ID = TRACE_TAG_PREFIX + KORRELASJONSID_FIELD.toLowerCase();
-    static final String TRACE_TAG_KLIENT_ID = TRACE_TAG_PREFIX + KLIENTID_FIELD.toLowerCase();
+public class AuroraHeaderWebFilter implements WebFilter {
+    private static final Logger logger = LoggerFactory.getLogger(AuroraHeaderWebFilter.class);
 
     private final Tracer tracer;
 
-    public AuroraWebFilter(Tracer tracer) {
+    public AuroraHeaderWebFilter(Tracer tracer) {
         this.tracer = tracer;
     }
 
@@ -44,20 +41,20 @@ public class AuroraWebFilter implements WebFilter {
         if (span != null) {
             HttpHeaders headers = exchange.getRequest().getHeaders();
 
-            String meldingsid = headers.getFirst(MELDINGSID_FIELD);
+            String meldingsid = headers.getFirst(HEADER_MELDINGSID);
             if (meldingsid != null) {
-                tracer.createBaggage(MELDINGSID_FIELD, meldingsid);
+                tracer.createBaggage(HEADER_MELDINGSID, meldingsid);
             }
 
-            String klientid = headers.getFirst(KLIENTID_FIELD);
+            String klientid = headers.getFirst(HEADER_KLIENTID);
             if (klientid != null) {
-                tracer.createBaggage(KLIENTID_FIELD, klientid);
+                tracer.createBaggage(HEADER_KLIENTID, klientid);
                 span.tag(TRACE_TAG_KLIENT_ID, klientid);
             }
 
-            String korrelasjonsid = Optional.ofNullable(headers.getFirst(KORRELASJONSID_FIELD))
+            String korrelasjonsid = Optional.ofNullable(headers.getFirst(HEADER_KORRELASJONSID))
                 .orElse(UUID.randomUUID().toString());
-            tracer.createBaggage(KORRELASJONSID_FIELD, korrelasjonsid);
+            tracer.createBaggage(HEADER_KORRELASJONSID, korrelasjonsid);
             span.tag(TRACE_TAG_KORRELASJONS_ID, korrelasjonsid);
 
             logger.debug("All baggage: {}", tracer.getAllBaggage());

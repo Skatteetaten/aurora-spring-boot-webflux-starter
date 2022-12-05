@@ -2,9 +2,9 @@ package no.skatteetaten.aurora.webflux;
 
 import static java.util.UUID.randomUUID;
 import static org.springframework.web.reactive.function.client.ClientRequest.from;
-import static no.skatteetaten.aurora.webflux.AuroraWebFilter.KLIENTID_FIELD;
-import static no.skatteetaten.aurora.webflux.AuroraWebFilter.KORRELASJONSID_FIELD;
-import static no.skatteetaten.aurora.webflux.AuroraWebFilter.MELDINGSID_FIELD;
+import static no.skatteetaten.aurora.webflux.AuroraConstants.HEADER_KLIENTID;
+import static no.skatteetaten.aurora.webflux.AuroraConstants.HEADER_KORRELASJONSID;
+import static no.skatteetaten.aurora.webflux.AuroraConstants.HEADER_MELDINGSID;
 
 import java.util.UUID;
 
@@ -25,17 +25,17 @@ public class AuroraWebClientCustomizer implements WebClientCustomizer {
     public void customize(WebClient.Builder builder) {
         builder
             .defaultHeader(HttpHeaders.USER_AGENT, name)
-            .defaultHeader(KLIENTID_FIELD, name)
+            .defaultHeader(HEADER_KLIENTID, name)
             .filter((request, next) -> next.exchange(
                 from(request)
-                    .header(MELDINGSID_FIELD, randomUUID().toString())
-                    .header(KORRELASJONSID_FIELD, addCorrelationId())
+                    .header(HEADER_MELDINGSID, randomUUID().toString())
+                    .header(HEADER_KORRELASJONSID, addCorrelationId())
                     .build()
             ));
     }
 
     protected String addCorrelationId() {
-        String korrId = Baggage.current().getEntryValue(KORRELASJONSID_FIELD);
+        String korrId = Baggage.current().getEntryValue(HEADER_KORRELASJONSID);
         if (korrId == null) {
             return UUID.randomUUID().toString();
         } else {

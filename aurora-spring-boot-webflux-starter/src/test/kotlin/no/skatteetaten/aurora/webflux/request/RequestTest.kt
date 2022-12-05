@@ -6,9 +6,9 @@ import assertk.assertions.isNotEmpty
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import assertk.assertions.isNullOrEmpty
-import no.skatteetaten.aurora.webflux.AuroraWebFilter.KLIENTID_FIELD
-import no.skatteetaten.aurora.webflux.AuroraWebFilter.KORRELASJONSID_FIELD
-import no.skatteetaten.aurora.webflux.AuroraWebFilter.MELDINGSID_FIELD
+import no.skatteetaten.aurora.webflux.AuroraConstants.HEADER_KLIENTID
+import no.skatteetaten.aurora.webflux.AuroraConstants.HEADER_KORRELASJONSID
+import no.skatteetaten.aurora.webflux.AuroraConstants.HEADER_MELDINGSID
 import no.skatteetaten.aurora.webflux.config.WebFluxStarterApplicationConfig
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -36,10 +36,10 @@ open class RequestTestController(private val tracer: Tracer) {
 
     @GetMapping("/test")
     fun getText() = mapOf(
-        "mdc_Korrelasjonsid" to MDC.get(KORRELASJONSID_FIELD),
-        "mdc_Klientid" to MDC.get(KLIENTID_FIELD),
-        "mdc_Meldingsid" to MDC.get(MELDINGSID_FIELD),
-        "span" to tracer.getBaggage(KORRELASJONSID_FIELD)?.get()
+        "mdc_Korrelasjonsid" to MDC.get(HEADER_KORRELASJONSID),
+        "mdc_Klientid" to MDC.get(HEADER_KLIENTID),
+        "mdc_Meldingsid" to MDC.get(HEADER_MELDINGSID),
+        "span" to tracer.getBaggage(HEADER_KORRELASJONSID)?.get()
     ).also {
         LoggerFactory.getLogger(RequestTestController::class.java).info("Clearing MDC, content: $it")
         MDC.clear()
@@ -74,21 +74,21 @@ class RequestTest {
 
         @Test
         fun `Klientid from request is put on MDC`() {
-            val response = sendRequest(port, mapOf(KLIENTID_FIELD to "klient/1.2"))
+            val response = sendRequest(port, mapOf(HEADER_KLIENTID to "klient/1.2"))
             assertThat(response["mdc_Klientid"]).isEqualTo("klient/1.2")
         }
 
         @Test
         fun `Korrelasjonsid from request is put on MDC`() {
             val korrelasjonsId = UUID.randomUUID().toString()
-            val response = sendRequest(port, mapOf(KORRELASJONSID_FIELD to korrelasjonsId))
+            val response = sendRequest(port, mapOf(HEADER_KORRELASJONSID to korrelasjonsId))
             assertThat(response["mdc_Korrelasjonsid"]).isEqualTo(korrelasjonsId)
         }
 
         @Test
         fun `Meldingsid from request is put on MDC`() {
             val meldingsId = UUID.randomUUID().toString()
-            val response = sendRequest(port, mapOf(MELDINGSID_FIELD to meldingsId))
+            val response = sendRequest(port, mapOf(HEADER_MELDINGSID to meldingsId))
             assertThat(response["mdc_Meldingsid"]).isEqualTo(meldingsId)
         }
     }

@@ -18,8 +18,8 @@ import org.springframework.util.StringUtils;
 import io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter;
 import io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporterBuilder;
 import io.opentelemetry.sdk.trace.SpanProcessor;
+import no.skatteetaten.aurora.webflux.AuroraHeaderWebFilter;
 import no.skatteetaten.aurora.webflux.AuroraSpanProcessor;
-import no.skatteetaten.aurora.webflux.AuroraWebFilter;
 
 @ConditionalOnMissingClass("no.skatteetaten.aurora.mvc.config.MvcStarterApplicationConfig")
 @Configuration
@@ -30,8 +30,8 @@ public class WebFluxStarterApplicationConfig {
 
     @Bean
     @ConditionalOnProperty(prefix = "aurora.webflux.header.filter", name = "enabled", matchIfMissing = true)
-    public AuroraWebFilter auroraWebFilter(Tracer tracer) {
-        return new AuroraWebFilter(tracer);
+    public AuroraHeaderWebFilter auroraHeaderWebFilter(Tracer tracer) {
+        return new AuroraHeaderWebFilter(tracer);
     }
 
     @Bean

@@ -20,7 +20,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 
 @SpringBootTest(
-    classes = [AuroraRequestParserMain::class, WebFluxStarterApplicationConfig::class],
+    classes = [AuroraHeaderWebFilterMain::class, WebFluxStarterApplicationConfig::class],
     properties = [
         "aurora.webflux.header.filter.enabled=true",
         "spring.sleuth.otel.exporter.otlp.enabled=true",

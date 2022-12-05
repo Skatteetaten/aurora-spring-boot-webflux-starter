@@ -1,6 +1,6 @@
 package no.skatteetaten.aurora.webflux.testapp;
 
-import static no.skatteetaten.aurora.webflux.AuroraWebFilter.KORRELASJONSID_FIELD;
+import static no.skatteetaten.aurora.webflux.AuroraConstants.HEADER_KORRELASJONSID;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,8 +30,8 @@ public class TestController {
 
     @GetMapping
     public Mono<Map<String, Object>> get() {
-        String korrelasjonsid = Baggage.current().getEntryValue(KORRELASJONSID_FIELD);
-        if (korrelasjonsid == null || !korrelasjonsid.equals(MDC.get(KORRELASJONSID_FIELD))) {
+        String korrelasjonsid = Baggage.current().getEntryValue(HEADER_KORRELASJONSID);
+        if (korrelasjonsid == null || !korrelasjonsid.equals(MDC.get(HEADER_KORRELASJONSID))) {
             throw new IllegalStateException("Korrelasjonsid from baggage does not match value from mdc");
         }
 
@@ -49,12 +49,11 @@ public class TestController {
 
     @GetMapping("/headers")
     public Map<String, String> headers(@RequestHeader HttpHeaders headers) {
-        String korrelasjonsid = MDC.get(KORRELASJONSID_FIELD);
+        String korrelasjonsid = MDC.get(HEADER_KORRELASJONSID);
         logger.info("MDC: {}", korrelasjonsid);
         Map<String, String> map = new HashMap<>(headers.toSingleValueMap());
-        map.put("MDC-" + KORRELASJONSID_FIELD, korrelasjonsid);
+        map.put("MDC-" + HEADER_KORRELASJONSID, korrelasjonsid);
         return map;
     }
-
 
 }

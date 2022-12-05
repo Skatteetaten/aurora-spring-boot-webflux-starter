@@ -26,7 +26,7 @@ aurora.webflux.header.filter.enabled = false
 [Spring Sleuth](https://spring.io/projects/spring-cloud-sleuth) is included by the base starter.
 It is a distributed tracing solution for Spring Boot apps. Spring Sleuth will generate its own IDs, however it can be useful to see how these IDs related to the `Korrelasjonsid` header.
 
-By enabling the filter `Korrelasjonsid` set will be included in the information sent to Tempo as a tag.
+By enabling the filter `Korrelasjonsid` set will be included in the information sent to Grafana Tempo as a tag.
 If `Korrelasjonsid` is not set, this tag will simply be skipped.
 
 `Korrelasjonsid`, `Meldingsid` and `Klientid` is set on MDC if they are present in the incoming request.
