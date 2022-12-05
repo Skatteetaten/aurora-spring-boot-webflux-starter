@@ -23,17 +23,16 @@ aurora {
 dependencies {
     api(platform("org.springframework.cloud:spring-cloud-dependencies:${Versions.springCloud}"))
     api(platform("org.springframework.cloud:spring-cloud-sleuth-otel-dependencies:${Versions.springOtel}"))
+    api("org.springframework.cloud:spring-cloud-sleuth-instrumentation:${Versions.sleuthVersion}")
+    api("org.springframework.cloud:spring-cloud-sleuth-autoconfigure:${Versions.sleuthVersion}")
     api("org.springframework.cloud:spring-cloud-starter-sleuth") {
         exclude(group = "org.springframework.cloud", module = "spring-cloud-sleuth-brave")
     }
-    api("org.springframework.cloud:spring-cloud-sleuth-otel-autoconfigure")
+    api("org.springframework.cloud:spring-cloud-sleuth-otel-autoconfigure") {
+        exclude(group = "io.opentelemetry", module = "opentelemetry-api")
+        exclude(group = "io.opentelemetry", module = "opentelemetry-semconv")
+    }
     api("io.opentelemetry:opentelemetry-exporter-otlp")
-    api("io.opentelemetry:opentelemetry-api") {
-        version { strictly(Versions.opentelemetryVersion) }
-    }
-    api("io.opentelemetry:opentelemetry-context") {
-        version { strictly(Versions.opentelemetryVersion) }
-    }
 
     api("org.springframework.boot:spring-boot-starter-webflux")
     api("no.skatteetaten.aurora.springboot:aurora-spring-boot-base-starter:${Versions.auroraBaseStarter}")
