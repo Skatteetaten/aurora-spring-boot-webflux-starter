@@ -22,17 +22,26 @@ aurora {
 
 dependencies {
     api(platform("org.springframework.cloud:spring-cloud-dependencies:${Versions.springCloud}"))
-    api("org.springframework.cloud:spring-cloud-starter-sleuth")
-    api("org.springframework.cloud:spring-cloud-sleuth-zipkin")
-
-    // strict versions to avoid conflicts
-    api("io.zipkin.brave:brave") {
-        version { strictly(Versions.brave) }
+    api(platform("org.springframework.cloud:spring-cloud-sleuth-otel-dependencies:${Versions.springOtel}"))
+    api("org.springframework.cloud:spring-cloud-sleuth-instrumentation:${Versions.sleuthVersion}")
+    api("org.springframework.cloud:spring-cloud-sleuth-autoconfigure:${Versions.sleuthVersion}")
+    api("org.springframework.cloud:spring-cloud-starter-sleuth") {
+        exclude(group = "org.springframework.cloud", module = "spring-cloud-sleuth-brave")
+    }
+    api("org.springframework.cloud:spring-cloud-sleuth-otel-autoconfigure") {
+        exclude(group = "io.opentelemetry", module = "opentelemetry-api")
+        exclude(group = "io.opentelemetry", module = "opentelemetry-semconv")
+        exclude(group = "org.springframework.cloud", module = "spring-cloud-sleuth-instrumentation")
+        exclude(group = "org.springframework.cloud", module = "spring-cloud-sleuth-autoconfigure")
+    }
+    api("io.opentelemetry:opentelemetry-exporter-otlp")
+    api("io.opentelemetry:opentelemetry-semconv:${Versions.opentelemetrySemconvVersion}") {
+        exclude(group = "io.opentelemetry", module = "opentelemetry-api")
     }
 
     api("org.springframework.boot:spring-boot-starter-webflux")
     api("no.skatteetaten.aurora.springboot:aurora-spring-boot-base-starter:${Versions.auroraBaseStarter}")
-    api("org.springframework.boot:spring-boot-configuration-processor")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     testImplementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin}")
     testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")

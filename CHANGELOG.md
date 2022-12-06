@@ -5,6 +5,9 @@ Alle viktige endringer i dette prosjektet vil bli dokumentert i denne filen.
 Formatet i denne filen er basert på [Keep a Changelog](http://keepachangelog.com/)
 og prosjektet følger [Semantic Versioning](http://semver.org/).
 
+## [2.0.0] - 2022-12-06
+- Bruker opentelemetry i stedet for zipkin/brave
+
 ## [1.6.0] - 2022-11-09
 - Oppdatert base-starter versjon
 - Starteren kompileres med java 8

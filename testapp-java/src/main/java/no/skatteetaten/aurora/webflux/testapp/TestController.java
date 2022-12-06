@@ -1,6 +1,6 @@
 package no.skatteetaten.aurora.webflux.testapp;
 
-import static no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD;
+import static no.skatteetaten.aurora.webflux.AuroraConstants.HEADER_KORRELASJONSID;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import brave.baggage.BaggageField;
+import io.opentelemetry.api.baggage.Baggage;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -30,8 +30,8 @@ public class TestController {
 
     @GetMapping
     public Mono<Map<String, Object>> get() {
-        BaggageField korrelasjonsid = BaggageField.getByName(KORRELASJONSID_FIELD);
-        if (!korrelasjonsid.getValue().equals(MDC.get(KORRELASJONSID_FIELD))) {
+        String korrelasjonsid = Baggage.current().getEntryValue(HEADER_KORRELASJONSID);
+        if (korrelasjonsid == null || !korrelasjonsid.equals(MDC.get(HEADER_KORRELASJONSID))) {
             throw new IllegalStateException("Korrelasjonsid from baggage does not match value from mdc");
         }
 
@@ -49,12 +49,11 @@ public class TestController {
 
     @GetMapping("/headers")
     public Map<String, String> headers(@RequestHeader HttpHeaders headers) {
-        String korrelasjonsid = MDC.get(KORRELASJONSID_FIELD);
+        String korrelasjonsid = MDC.get(HEADER_KORRELASJONSID);
         logger.info("MDC: {}", korrelasjonsid);
         Map<String, String> map = new HashMap<>(headers.toSingleValueMap());
-        map.put("MDC-" + KORRELASJONSID_FIELD, korrelasjonsid);
+        map.put("MDC-" + HEADER_KORRELASJONSID, korrelasjonsid);
         return map;
     }
-
 
 }

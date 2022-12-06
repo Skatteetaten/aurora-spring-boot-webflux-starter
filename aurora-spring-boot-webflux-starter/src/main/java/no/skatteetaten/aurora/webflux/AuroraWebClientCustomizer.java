@@ -2,18 +2,17 @@ package no.skatteetaten.aurora.webflux;
 
 import static java.util.UUID.randomUUID;
 import static org.springframework.web.reactive.function.client.ClientRequest.from;
-import static no.skatteetaten.aurora.webflux.AuroraRequestParser.KLIENTID_FIELD;
-import static no.skatteetaten.aurora.webflux.AuroraRequestParser.KORRELASJONSID_FIELD;
-import static no.skatteetaten.aurora.webflux.AuroraRequestParser.MELDINGSID_FIELD;
+import static no.skatteetaten.aurora.webflux.AuroraConstants.HEADER_KLIENTID;
+import static no.skatteetaten.aurora.webflux.AuroraConstants.HEADER_KORRELASJONSID;
+import static no.skatteetaten.aurora.webflux.AuroraConstants.HEADER_MELDINGSID;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import brave.baggage.BaggageField;
+import io.opentelemetry.api.baggage.Baggage;
 
 public class AuroraWebClientCustomizer implements WebClientCustomizer {
     private final String name;
@@ -26,22 +25,21 @@ public class AuroraWebClientCustomizer implements WebClientCustomizer {
     public void customize(WebClient.Builder builder) {
         builder
             .defaultHeader(HttpHeaders.USER_AGENT, name)
-            .defaultHeader(KLIENTID_FIELD, name)
+            .defaultHeader(HEADER_KLIENTID, name)
             .filter((request, next) -> next.exchange(
                 from(request)
-                    .header(MELDINGSID_FIELD, randomUUID().toString())
-                    .header(KORRELASJONSID_FIELD, addCorrelationId())
+                    .header(HEADER_MELDINGSID, randomUUID().toString())
+                    .header(HEADER_KORRELASJONSID, addCorrelationId())
                     .build()
             ));
     }
 
     protected String addCorrelationId() {
-        return Optional.ofNullable(getBaggageField())
-            .map(BaggageField::getValue)
-            .orElseGet(() -> UUID.randomUUID().toString());
-    }
-
-    BaggageField getBaggageField() {
-        return BaggageField.getByName(KORRELASJONSID_FIELD);
+        String korrId = Baggage.current().getEntryValue(HEADER_KORRELASJONSID);
+        if (korrId == null) {
+            return UUID.randomUUID().toString();
+        } else {
+            return korrId;
+        }
     }
 }

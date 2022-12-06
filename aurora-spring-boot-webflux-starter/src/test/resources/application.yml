@@ -1,7 +1,17 @@
 spring:
     application:
         name: webflux-starter
-
+    sleuth:
+        otel:
+            log:
+                slf4j:
+                    enabled: true
+            config:
+                trace-id-ratio-based: 1.0
+        baggage:
+            correlation-fields: Korrelasjonsid,Klientid,Meldingsid
+            local-fields: Korrelasjonsid,Klientid,Meldingsid
+            remote-fields: Korrelasjonsid
 aurora:
     webflux:
         header:
@@ -23,5 +33,4 @@ management:
     server:
         port: -1
 
-logging.level.zipkin2.reporter: ERROR
 logging.level.no.skatteetaten.aurora.webflux: DEBUG
