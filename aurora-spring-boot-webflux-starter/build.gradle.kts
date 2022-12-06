@@ -35,6 +35,9 @@ dependencies {
         exclude(group = "org.springframework.cloud", module = "spring-cloud-sleuth-autoconfigure")
     }
     api("io.opentelemetry:opentelemetry-exporter-otlp")
+    api("io.opentelemetry:opentelemetry-semconv:${Versions.opentelemetrySemconvVersion}") {
+        exclude(group = "io.opentelemetry", module = "opentelemetry-api")
+    }
 
     api("org.springframework.boot:spring-boot-starter-webflux")
     api("no.skatteetaten.aurora.springboot:aurora-spring-boot-base-starter:${Versions.auroraBaseStarter}")

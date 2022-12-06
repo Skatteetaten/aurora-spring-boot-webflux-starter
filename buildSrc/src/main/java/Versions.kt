@@ -8,6 +8,7 @@ object Versions {
     const val sleuthVersion = "3.1.5"
     const val springOtel = "1.1.0"
     const val opentelemetryVersion = "1.18.0"
+    const val opentelemetrySemconvVersion = "1.18.0-alpha"
     const val brave = "5.13.9"
 
     const val assertk = "0.25"
